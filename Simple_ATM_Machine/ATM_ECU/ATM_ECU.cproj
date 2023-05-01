@@ -189,6 +189,17 @@
     <Compile Include="MCAL\dio\dio_program.c">
       <SubType>compile</SubType>
     </Compile>
+
+    <Compile Include="MCAL\exi\exi_interface.h">
+          <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\exi\exi_private.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\exi\exi_program.c">
+      <SubType>compile</SubType>
+    </Compile>
+
     <Compile Include="MCAL\timer\timer_config.h">
       <SubType>compile</SubType>
     </Compile>
@@ -211,6 +222,7 @@
     <Folder Include="HAL" />
     <Folder Include="LIB" />
     <Folder Include="MCAL\dio" />
+    <Folder Include="MCAL\exi" />
     <Folder Include="MCAL\timer" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
