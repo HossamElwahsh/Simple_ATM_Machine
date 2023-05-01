@@ -11,6 +11,11 @@
 #define EXI_PRIVATE_H_
 
 /* ***********************************************************************************************/
+
+/* Global Interrutpt */
+#define GLOBAL_INTERRUPT_ENABLE_BIT      7
+#define TIMER_U8_SREG_REG            *( ( volatile u8 * ) 0x5F )
+
 /* EXI Registers' Locations */
 
 #define EXI_U8_MCUCR_REG		*( ( volatile u8 * ) 0x55 )
