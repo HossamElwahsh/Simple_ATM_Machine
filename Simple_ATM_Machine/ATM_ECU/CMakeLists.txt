@@ -32,4 +32,4 @@ add_executable(
         ATM_ECU/main.c
         ATM_ECU/HAL/kpd/kpd_program.c
         ATM_ECU/HAL/buzzer/buzzer.c
-        )
+        ATM_ECU/MCAL/exi/exi_program.c)
