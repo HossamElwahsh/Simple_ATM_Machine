@@ -138,33 +138,6 @@
     <Compile Include="APP\app_program.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\buzzer\buzzer.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\buzzer\buzzer.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\kpd\kpd_config.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\kpd\kpd_interface.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\kpd\kpd_program.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\lcd\lcd_config.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\lcd\lcd_interface.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\lcd\lcd_private.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\lcd\lcd_program.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="LIB\bit_math.h">
       <SubType>compile</SubType>
     </Compile>
@@ -204,9 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APP" />
-    <Folder Include="HAL\lcd" />
-    <Folder Include="HAL\kpd" />
-    <Folder Include="HAL\buzzer" />
     <Folder Include="MCAL" />
     <Folder Include="HAL" />
     <Folder Include="LIB" />

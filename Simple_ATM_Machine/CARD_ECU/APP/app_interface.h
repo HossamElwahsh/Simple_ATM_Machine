@@ -23,9 +23,7 @@
 #include "../MCAL/dio/dio_private.h"
 
 /*HAl*/
-#include "../hAL/lcd/lcd_interface.h"
-#include "../HAL/kpd/kpd_interface.h"
-#include "../HAL/buzzer/buzzer.h"
+
 /* APP Macros */
 
 /* APP Delays */
