@@ -13,7 +13,13 @@
 
 
 /* Macros */
-#define BUZ_PORT PORT_B
+/* LCD_DATA_PORT Options
+ * PORT_A: 0
+ * PORT_B: 1
+ * PORT_C: 2
+ * PORT_D: 3
+ * */
+#define BUZ_PORT 1
 #define BUZ_PIN 3
 
 /* Prototypes */
