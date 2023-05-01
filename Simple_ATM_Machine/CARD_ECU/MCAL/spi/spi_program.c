@@ -88,7 +88,7 @@ void SPI_init()
 #elif SPI_MODE == SPI_MODE_SLAVE
     /* Init SPI port pins */
     DIO_portInit(SPI_PORT, DIO_PORT_IN, SPI_SLAVE_IN_PINS);
-    DIO_init(SPI_MOSI, SPI_PORT, DIO_IN);
+    DIO_init(SPI_MISO, SPI_PORT, DIO_OUT);
 
     /* Init SPI slave GPIO Notify pin as OUTPUT */
     DIO_init(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_OUT);
