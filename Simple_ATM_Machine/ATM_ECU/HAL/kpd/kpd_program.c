@@ -39,7 +39,7 @@ void KPD_initKPD    ( void )
 	DIO_init( KPD_U8_INPUT_PIN2, KPD_U8_INPUT_PORT, DIO_IN );
 	DIO_init( KPD_U8_INPUT_PIN3, KPD_U8_INPUT_PORT, DIO_IN );
 	
-	/* Write Low on three output pins */
+	/* Write High on three output pins */
 	DIO_write( KPD_U8_OUTPUT_PIN1, KPD_U8_OUTPUT_PORT, DIO_U8_PIN_HIGH );
 	DIO_write( KPD_U8_OUTPUT_PIN2, KPD_U8_OUTPUT_PORT, DIO_U8_PIN_HIGH );
 	DIO_write( KPD_U8_OUTPUT_PIN3, KPD_U8_OUTPUT_PORT, DIO_U8_PIN_HIGH );

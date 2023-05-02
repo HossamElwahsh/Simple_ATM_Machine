@@ -186,6 +186,18 @@
     <Compile Include="MCAL\timer\timer_program.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MCAL\uart\uart_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\uart\uart_interface.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\uart\uart_private.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\uart\uart_program.c">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APP" />
@@ -193,6 +205,7 @@
     <Folder Include="HAL" />
     <Folder Include="LIB" />
     <Folder Include="MCAL\dio" />
+    <Folder Include="MCAL\uart" />
     <Folder Include="MCAL\spi\" />
     <Folder Include="MCAL\timer" />
   </ItemGroup>

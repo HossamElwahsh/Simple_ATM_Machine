@@ -39,9 +39,9 @@ void APP_initialization(void) {
 	TIMER_delay_ms(500);
 	LCD_clear();
 
-//    u8 data;
-//    SPI_receive(&data);
-    u8 test = 1;
+//  u8 data;
+//  SPI_receive(&data);
+//  u8 test = 1;
 
 // 	SPI_send('H');
 // 	SPI_send('O');
@@ -49,7 +49,8 @@ void APP_initialization(void) {
 // 	SPI_send('S');
 // 	SPI_send('A');
 // 	SPI_send('M');
-//     while(1)
+
+//  while(1)
 // 	{
 // 		SPI_send('b');
 // 	}
