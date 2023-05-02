@@ -1,7 +1,7 @@
 /*
  * uart_private.h
  *
- *     Created on: Aug 5, 2021
+ *     Created on: Apr 11, 2023
  *         Author: Abdelrhman Walaa - https://github.com/AbdelrhmanWalaa
  *    Description: This file contains all Universal Asynchronous Receiver Transmitter (UART) registers' locations and description.
  *  MCU Datasheet: AVR ATmega32 - https://ww1.microchip.com/downloads/en/DeviceDoc/Atmega32A-DataSheet-Complete-DS40002072A.pdf

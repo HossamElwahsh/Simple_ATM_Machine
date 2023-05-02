@@ -9,9 +9,6 @@
 #ifndef KPD_CONFIG_H_
 #define KPD_CONFIG_H_
 
-/* MCAL */
-#include "../../MCAL/dio/dio_interface.h"
-
 /*******************************************************************************************************************************************************************/
 /* ATmega32(L) interfacing with KPD: */
 /*
@@ -62,7 +59,7 @@
 
 /* KPD Output and Input Pins */
 /* Options: 1.Rows:    KPD_U8_R1_PIN
- * 			           KPD_U8_R2_PIN.
+ * 			           KPD_U8_R2_PIN
  *					   KPD_U8_R3_PIN
  *
  *          2.Columns: KPD_U8_C1_PIN
@@ -79,7 +76,7 @@
 
 /* KPD Configured Keys */
 #define KPD_AU8_KEYS	  	  { { '1', '2', '3' },  \
-								{ '4', '5', '6' },   \
+								{ '4', '5', '6' },  \
 								{ '7', '8', '9' } }	
 
 /* End of Configurations */

@@ -1,7 +1,7 @@
 /*
  * uart_program.c
  *
- *     Created on: Aug 5, 2021
+ *     Created on: Apr 11, 2023
  *         Author: Abdelrhman Walaa - https://github.com/AbdelrhmanWalaa
  *    Description: This file contains all Universal Asynchronous Receiver Transmitter (UART) functions' implementation, and ISR functions' prototypes and implementation.
  *  MCU Datasheet: AVR ATmega32 - https://ww1.microchip.com/downloads/en/DeviceDoc/Atmega32A-DataSheet-Complete-DS40002072A.pdf
@@ -40,12 +40,12 @@ static const u16 Au16_gs_UBRRValuesDoubleSpeed[6][8] = { {  51   ,  25   ,  12  
 
 /*******************************************************************************************************************************************************************/
 /*
- Name: UART_vdInitialization
+ Name: UART_initialization
  Input: void
  Output: void
  Description: Function to initialize UART peripheral.
 */
-vd UART_vdInitialization ( void )
+vd UART_initialization ( void )
 {
     /* The UBRRH Register shares the same I/O location as the UCSRC Register. Therefore some special consideration must be taken when accessing this I/O location. */
     /* When doing a write access of this I/O location, the high bit of the value written, the USART Register Select ( URSEL -> 8th ) bit, controls which one of the two registers that will be written. 
@@ -69,8 +69,8 @@ vd UART_vdInitialization ( void )
 
             CLR_BIT( UART_U8_UCSRA_REG, UART_U8_U2X_BIT );
             /* Baud Rate in Normal Speed Mode */
-            UART_U8_UBRRL_REG = ( u8 )   Au16_gs_UBRRValuesNormalSpeed[3][UART_U8_BAUD_RATE_SELECT];
-            UART_U8_UBRRH_REG = ( u8 ) ( Au16_gs_UBRRValuesNormalSpeed[3][UART_U8_BAUD_RATE_SELECT] >> 8 );
+            UART_U8_UBRRL_REG = ( u8 )   Au16_gs_UBRRValuesNormalSpeed[0][UART_U8_BAUD_RATE_SELECT];
+            UART_U8_UBRRH_REG = ( u8 ) ( Au16_gs_UBRRValuesNormalSpeed[0][UART_U8_BAUD_RATE_SELECT] >> 8 );
         break;
 
         /* Case 2: Speed = Double Speed */
@@ -78,8 +78,8 @@ vd UART_vdInitialization ( void )
 
             SET_BIT( UART_U8_UCSRA_REG, UART_U8_U2X_BIT );
             /* Baud Rate in Double Speed Mode */
-            UART_U8_UBRRL_REG = ( u8 )   Au16_gs_UBRRValuesDoubleSpeed[3][UART_U8_BAUD_RATE_SELECT];
-            UART_U8_UBRRH_REG = ( u8 ) ( Au16_gs_UBRRValuesDoubleSpeed[3][UART_U8_BAUD_RATE_SELECT] >> 8 ); 
+            UART_U8_UBRRL_REG = ( u8 )   Au16_gs_UBRRValuesDoubleSpeed[0][UART_U8_BAUD_RATE_SELECT];
+            UART_U8_UBRRH_REG = ( u8 ) ( Au16_gs_UBRRValuesDoubleSpeed[0][UART_U8_BAUD_RATE_SELECT] >> 8 ); 
         break;
     }
 
@@ -184,7 +184,7 @@ vd UART_vdInitialization ( void )
 /*******************************************************************************************************************************************************************/
 /*
  Name: UART_receiveByte
- Input: u8 interruptionMode and Pointer to u8 returnedReceiveByte
+ Input: u8 InterruptionMode and Pointer to u8 ReturnedReceiveByte
  Output: u8 Error or No Error
  Description: Function to Receive Byte using both Polling and Interrupt Modes.
 */
@@ -248,7 +248,7 @@ u8 UART_receiveByte    ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte
 /*******************************************************************************************************************************************************************/
 /*
  Name: UART_transmitByte
- Input: u8 interruptionMode and u8 transmitByte
+ Input: u8 InterruptionMode and u8 TransmitByte
  Output: u8 Error or No Error
  Description: Function to Transmit Byte using both Polling and Interrupt Modes.
 */
@@ -312,7 +312,7 @@ u8 UART_transmitByte   ( u8 u8_a_interruptionMode, u8 u8_a_transmitByte )
 /*******************************************************************************************************************************************************************/
 /*
  Name: UART_transmitString
- Input: Pointer to u8 string
+ Input: Pointer to u8 String
  Output: u8 Error or No Error
  Description: Function to Transmit String.
 */
@@ -326,7 +326,7 @@ u8 UART_transmitString ( u8 *pu8_a_string )
 	{
 		while ( *pu8_a_string != '\0' )
 		{
-			UART_u8TransmitByte( UART_U8_POLLING_MODE, *pu8_a_string );
+			UART_transmitByte( UART_U8_POLLING_MODE, *pu8_a_string );
 			/* Increment String */
 			pu8_a_string++;
 		}
@@ -343,13 +343,13 @@ u8 UART_transmitString ( u8 *pu8_a_string )
 
 /*******************************************************************************************************************************************************************/
 /*
- Name: UART_u8RXCSetCallBack
+ Name: UART_RXCSetCallBack
  Input: Pointer to Function that takes void and returns void
  Output: u8 Error or No Error
  Description: Function to receive an address of a function ( in APP Layer ) to be called back in ISR function,
   	  	  	  the address is passed through a pointer to function ( RXCInterruptAction ), and then pass this address to ISR function.
 */
-u8 UART_u8RXCSetCallBack ( void ( *vpf_a_RXCInterruptAction ) ( void ) )
+u8 UART_RXCSetCallBack ( void ( *vpf_a_RXCInterruptAction ) ( void ) )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
@@ -372,13 +372,13 @@ u8 UART_u8RXCSetCallBack ( void ( *vpf_a_RXCInterruptAction ) ( void ) )
 
 /*******************************************************************************************************************************************************************/
 /*
- Name: UART_u8UDRESetCallBack
+ Name: UART_UDRESetCallBack
  Input: Pointer to Function that takes void and returns void
  Output: u8 Error or No Error
  Description: Function to receive an address of a function ( in APP Layer ) to be called back in ISR function,
   	  	  	  the address is passed through a pointer to function ( UDREInterruptAction ), and then pass this address to ISR function.
 */
-u8 UART_u8UDRESetCallBack( void ( *vpf_a_UDREInterruptAction ) ( void ) )
+u8 UART_UDRESetCallBack( void ( *vpf_a_UDREInterruptAction ) ( void ) )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
@@ -401,13 +401,13 @@ u8 UART_u8UDRESetCallBack( void ( *vpf_a_UDREInterruptAction ) ( void ) )
 
 /*******************************************************************************************************************************************************************/
 /*
- Name: UART_u8TXCSetCallBack
+ Name: UART_TXCSetCallBack
  Input: Pointer to Function that takes void and returns void
  Output: u8 Error or No Error
  Description: Function to receive an address of a function ( in APP Layer ) to be called back in ISR function,
   	  	  	  the address is passed through a pointer to function ( TXCInterruptAction ), and then pass this address to ISR function.
 */
-u8 UART_u8TXCSetCallBack ( void ( *vpf_a_TXCInterruptAction ) ( void ) )
+u8 UART_TXCSetCallBack ( void ( *vpf_a_TXCInterruptAction ) ( void ) )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;

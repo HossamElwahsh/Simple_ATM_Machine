@@ -19,6 +19,8 @@
 void APP_initialization(void) {
 	
 	/* MCAL Initialization */
+	GLI_enableGIE();
+	
 	EXI_enablePIE(MASTER_REQ_RECEIVE_INT, MASTER_REQ_RECEIVE_SENSE);
     EXI_intSetCallBack(MASTER_REQ_RECEIVE_INT,APP_trigger);
 
@@ -29,6 +31,7 @@ void APP_initialization(void) {
 	
 	/* HAL Initialization */
 	LCD_init();
+	
 	KPD_initKPD();
 	
 	LCD_clear();

@@ -18,9 +18,9 @@
 #include <stdlib.h>
 
 /* MCAL */
-#include "../MCAL/timer/timer_interface.h"
 #include "../MCAL/dio/dio_interface.h"
-#include "../MCAL/dio/dio_private.h"
+#include "../MCAL/timer/timer_interface.h"
+
 
 /*HAl*/
 

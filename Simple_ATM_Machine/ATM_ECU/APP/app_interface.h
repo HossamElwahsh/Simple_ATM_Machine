@@ -20,12 +20,12 @@
 /* MCAL */
 #include "../MCAL/timer/timer_interface.h"
 #include "../MCAL/dio/dio_interface.h"
-#include "../MCAL/dio/dio_private.h"
 #include "../MCAL/spi/spi_interface.h"
 #include "../MCAL/exi/exi_interface.h"
+#include "../MCAL/gli/gli_interface.h"
 
-/*HAl*/
-#include "../hAL/lcd/lcd_interface.h"
+/* HAL */
+#include "../HAL/lcd/lcd_interface.h"
 #include "../HAL/kpd/kpd_interface.h"
 #include "../HAL/buzzer/buzzer.h"
 
