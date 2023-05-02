@@ -25,6 +25,8 @@ void SPI_init()
     /* SET slave select pin to high */
     DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_HIGH);
 
+//    SET_BIT(SPI_U8_SPCR_REG, SPI_SPCR_CPHA_BIT);
+
     /* Init SPI Clock Speed in master only */
     //region Init Clock Speed
 #if SPI_CLOCK == SPI_CLOCK_FOSC_4
@@ -113,6 +115,11 @@ u8 SPI_receive(u8 * u8Ptr_a_byte)
 {
 #if SPI_MODE == SPI_MODE_MASTER
 
+    SPI_U8_SPDR_REG = U8_DUMMY_VAL;
+    while(!(SPI_U8_SPSR_REG & (1<<SPI_SPSR_SPIF_BIT)));	/* Wait till transmission complete */
+    return SPI_U8_SPDR_REG;
+
+
     /* Pull SS pin to low to start SPI */
     DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
 
@@ -152,6 +159,14 @@ u8 SPI_send(u8 u8_a_byte)
 {
 #if SPI_MODE == SPI_MODE_MASTER
 
+
+    char flush_buffer;
+    SPI_U8_SPDR_REG = u8_a_byte;			/* Write data to SPI data register */
+    while(!(SPI_U8_SPSR_REG & (1<<SPI_SPSR_SPIF_BIT)));	/* Wait till transmission complete */
+    flush_buffer = SPI_U8_SPDR_REG;		/* Flush received data */
+/* Note: SPIF flag is cleared by first reading SPSR (with SPIF set) and then accessing SPDR hence flush buffer used here to access SPDR after SPSR read */
+    return flush_buffer;
+
     /* Pull SS pin to low to start SPI */
     DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
 
@@ -167,7 +182,7 @@ u8 SPI_send(u8 u8_a_byte)
     /* Bring SS high again to stop/sync with slave */
     DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_HIGH);
 
-    return STD_OK;
+    return u8_l_flushBuffer;
 
 #elif SPI_MODE == SPI_MODE_SLAVE
 

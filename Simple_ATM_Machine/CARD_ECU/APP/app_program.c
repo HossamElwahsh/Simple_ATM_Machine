@@ -23,6 +23,21 @@
 */
 void APP_initialization( void )
 {
+    TIMER_timer0NormalModeInit(DISABLED);
+
+    u8 count;
+    char buffer[5];
+
+    SPI_init();
+
+
+    while(1)
+    {
+        u8 data;
+        count = SPI_receive(&data);
+    }
+//	TIMER_timer0NormalModeInit(DISABLED);
+//    TIMER_delay_ms(2000);
 
 }
 
@@ -36,6 +51,19 @@ void APP_initialization( void )
 void APP_startProgram  ( void )
 {
 
+//    SPI_send(0xFF); //H << 1
+//    SPI_send(0xFF); //H << 1
+    //TIMER_delay_ms(500);
+//    SPI_send('H');
+//	SPI_send('H');
+//	SPI_send('H');
+//    SPI_send('i');
+//	SPI_send(0b00000001); // 1
+//	SPI_send(0b10000000); // 127
+//	SPI_send(0b00000010); // 2
+//	SPI_send(0b00000011); // 3
+//	SPI_send(0b00000100); // 4
+    //TIMER_delay_ms(500);
 }
 
 /*******************************************************************************************************************************************************************/

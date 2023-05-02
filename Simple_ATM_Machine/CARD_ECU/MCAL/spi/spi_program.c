@@ -14,7 +14,7 @@
 void SPI_init()
 {
     /* Set SPI data order */
-    WRITE_BIT(SPI_U8_SPCR_REG, SPI_SPCR_DODR_BIT, SPI_DORD);
+//    WRITE_BIT(SPI_U8_SPCR_REG, SPI_SPCR_DODR_BIT, SPI_DORD);
 
     /* Init SPI Pins */
 #if SPI_MODE == SPI_MODE_MASTER
@@ -132,12 +132,19 @@ u8 SPI_receive(u8 * u8Ptr_a_byte)
 
 #elif SPI_MODE == SPI_MODE_SLAVE
 
-    SPI_U8_SPDR_REG = U8_DUMMY_VAL;
+//    SPI_U8_SPDR_REG = U8_DUMMY_VAL;
+
+    // Notify master to receive data (falling edge)
+    DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_HIGH);
+    DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_LOW);
 
     while(!GET_BIT(SPI_U8_SPSR_REG, SPI_SPSR_SPIF_BIT));
 
     *u8Ptr_a_byte = SPI_U8_SPDR_REG;
-    return STD_OK;
+//    return SPI_U8_SPDR_REG;
+    SPI_U8_SPDR_REG = 'H';
+    return *u8Ptr_a_byte;
+//    return STD_OK;
 #endif
 }
 

@@ -34,6 +34,8 @@
 /* APP Delays */
 
 /* APP STATES */
+#define APP_STATE_RUNNING   0
+#define APP_STATE_RECEIVING 1
 
 /* APP Buttons */
 

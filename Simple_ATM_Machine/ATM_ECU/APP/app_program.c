@@ -24,6 +24,8 @@
 //									{ 25600.0f   , RUNNING, "4946085117749481" }, { 10662670.0f, RUNNING, "5424438206113309" },
 //									{ 895000.0f  , RUNNING, "4946099683908835" }, { 1824.0f    , RUNNING, "5264166325336492" } };
 /* Global variables */
+u8 u8_g_appState = APP_STATE_RUNNING;
+u8 u8_g_bytesCountToRead = 0;
 
 /**
  *
@@ -35,63 +37,73 @@ void APP_initialization(void) {
 	
 	EXI_enablePIE(MASTER_REQ_RECEIVE_INT, MASTER_REQ_RECEIVE_SENSE);
     EXI_intSetCallBack(MASTER_REQ_RECEIVE_INT,APP_trigger);
+    SPI_init();
+    TIMER_timer0NormalModeInit(DISABLED);
 
-	TIMER_timer0NormalModeInit( DISABLED );
-	TIMER_timer2NormalModeInit( ENABLED );
-
-	SPI_init();
-	
-	/* HAL Initialization */
-	LCD_init();
-	
-	KPD_initKPD();
-	
+    LCD_init();
+    BUZZER_init();
 	LCD_clear();
-	// Jump to 1st line Center
-	LCD_setCursor(0,4);
-	// Show welcome Message
-	LCD_sendString((u8 *)"Welcome\n Hacker  Kermit");
-	TIMER_delay_ms(500);
-	LCD_clear();
+    LCD_sendString((u8 *)"STARTING...");
+    LCD_setCursor(LCD_LINE1, LCD_COL0);
 
-//  u8 data;
-//  SPI_receive(&data);
-//  u8 test = 1;
+    LCD_sendString((u8 *) "Sending: ");
 
-// 	SPI_send('H');
-// 	SPI_send('O');
-// 	SPI_send('S');
-// 	SPI_send('S');
-// 	SPI_send('A');
-// 	SPI_send('M');
+    // ss enable
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+    u8 count = 0;
+    char buffer[5];
+    while(1)
+    {
+        SPI_send(count);
+        sprintf(buffer, "%d", count);
+        LCD_setCursor(LCD_LINE1, LCD_COL10);
+        LCD_sendString((u8 *) buffer);
+        count++;
+        TIMER_delay_ms(1000);
+    }
 
-//  while(1)
-// 	{
-// 		SPI_send('b');
-// 	}
+
+//    SPI_send('H');
 }
 
 
-/**
- *
- */
-void APP_startProgram  (void) {
+void APP_startProgram(void) {
+    while(1)
+    {
+        switch (u8_g_appState) {
+            case APP_STATE_RUNNING:
+//                SPI_send(12);
+                BUZZER_on();
+                TIMER_delay_ms(500);
+                BUZZER_off();
+                TIMER_delay_ms(500);
+//                SPI_send(2);
+//                SPI_send(3);
+//                SPI_send(4);
+//                SPI_send(5);
+//                SPI_send('H'); // 0x48
 
-	u8 Loc_u8BTNValue = KPD_U8_KEY_NOT_PRESSED;
-		
-	/* Toggle Forever */
-	while(1)
-	{
-		KPD_getPressedKey( &Loc_u8BTNValue );
-			
-		if ( Loc_u8BTNValue != KPD_U8_KEY_NOT_PRESSED )
-		{
-			LCD_sendChar( Loc_u8BTNValue );
-		}
-	}
+                if(u8_g_bytesCountToRead > 0) u8_g_appState = APP_STATE_RECEIVING;
+                break;
+            case APP_STATE_RECEIVING: {
+                BUZZER_on();
+                while(u8_g_bytesCountToRead > 0)
+                {
+                    u8 rec = SPI_send('H');
+                    LCD_sendChar(rec);
+                    TIMER_delay_ms(1500);
+//                    u8_g_bytesCountToRead--;
+                }
+                u8_g_appState = APP_STATE_RUNNING;
+                break;
+            }
+        }
+    }
 }
 
 void APP_trigger(void) {
     // receive SPI data
-
+    u8_g_bytesCountToRead++;
+    if(u8_g_bytesCountToRead > 250) u8_g_bytesCountToRead = 1;
+//    u8_g_appState = APP_STATE_RECEIVING;
 }
