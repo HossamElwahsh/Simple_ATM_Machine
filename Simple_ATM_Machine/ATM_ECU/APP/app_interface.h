@@ -27,13 +27,25 @@
 #include "../HAL/lcd/lcd_interface.h"
 #include "../HAL/kpd/kpd_interface.h"
 #include "../HAL/buzzer/buzzer.h"
+#include "../HAL/btn/btn_interface.h"
 
 /* APP Macros */
 #define APP_ACTION_SHOW_CURSOR LCD_changeCursor(1);
 #define APP_ACTION_HIDE_CURSOR LCD_changeCursor(0);
+#define APP_MAX_DB_SIZE 20
+#define APP_MAX_TRIALS  3
+#define APP_PIN_DIGITS  4
+#define APP_PIN_CHAR     '*'
+#define APP_ZERO_CHAR    '0'
+
 
 /* APP Delays */
-#define APP_DELAY_WELCOME_MSG 1000
+#define APP_DELAY_WELCOME_MSG   1000
+#define APP_DELAY_ERROR_MSG     1000
+#define APP_DELAY_APPROVED_MSG  1000
+#define APP_DELAY_LONG_PRESS    2000
+#define APP_DELAY_BTN_POLL      50
+
 
 /* APP STATES */
 #define APP_STATE_LAUNCH        0
@@ -55,7 +67,15 @@
 #define APP_RESP_PIN_OK 0xF0    // Slave response PIN verification OK, PIN match
 #define APP_RESP_PIN_WRONG 0xF5 // Slave response PIN verification fail, Wrong PIN
 
-/* APP Buttons */
+/* APP Button */
+#define APP_BTN_ENTER_ZERO 2        // PIN 2
+#define APP_BTN_ENTER_ZERO_ID 3     // Button 3
+#define APP_BTN_ENTER_ZERO_PORT 1   // PORT B
+
+/* APP Button States */
+#define APP_BTN_STATE_LONG_RELEASED 2
+#define APP_BTN_STATE_PRESSED  1
+#define APP_BTN_STATE_RELEASED 0
 
 /* APP Actions */
 
@@ -68,7 +88,7 @@ typedef enum EN_accountState_t
 
 typedef struct ST_accountsDB_t
 {
-    float f32_balance;
+    f32 f32_balance;
     EN_accountState_t en_state;
     u8 u8_primaryAccountNumber[20];
 }ST_accountsDB_t;
