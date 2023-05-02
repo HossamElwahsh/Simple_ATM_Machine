@@ -25,6 +25,9 @@ void APP_initialization( void )
 {
     TIMER_timer0NormalModeInit(DISABLED);
 
+
+
+    return;
     u8 count;
     char buffer[5];
 
