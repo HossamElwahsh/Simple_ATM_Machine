@@ -132,8 +132,6 @@ u8 SPI_receive(u8 * u8Ptr_a_byte)
 
 #elif SPI_MODE == SPI_MODE_SLAVE
 
-//    SPI_U8_SPDR_REG = U8_DUMMY_VAL;
-
     // Notify master to receive data (falling edge)
     DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_HIGH);
     DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_LOW);
@@ -194,4 +192,58 @@ u8 SPI_send(u8 u8_a_byte)
     return STD_OK;
 #endif
 
+}
+
+
+/**
+ * Receive and Transmit one byte via SPI
+ *
+ * @param [in]u8_a_byte byte to send
+ *
+ * @return Received byte
+ */
+u8 SPI_transceiver(u8 u8_a_byte)
+{
+#if SPI_MODE == SPI_MODE_MASTER
+
+
+    char flush_buffer;
+    SPI_U8_SPDR_REG = u8_a_byte;			/* Write data to SPI data register */
+    while(!(SPI_U8_SPSR_REG & (1<<SPI_SPSR_SPIF_BIT)));	/* Wait till transmission complete */
+    flush_buffer = SPI_U8_SPDR_REG;		/* Flush received data */
+/* Note: SPIF flag is cleared by first reading SPSR (with SPIF set) and then accessing SPDR hence flush buffer used here to access SPDR after SPSR read */
+    return flush_buffer;
+
+/* Pull SS pin to low to start SPI */
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+
+/* write data to SPI data register */
+    SPI_U8_SPDR_REG = u8_a_byte;
+
+/* Block till transmission is complete */
+    while(!GET_BIT(SPI_U8_SPSR_REG, SPI_SPSR_SPIF_BIT));
+
+/* flush received noise data */
+    u8 u8_l_flushBuffer = SPI_U8_SPDR_REG;
+
+/* Bring SS high again to stop/sync with slave */
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_HIGH);
+
+    return u8_l_flushBuffer;
+
+#elif SPI_MODE == SPI_MODE_SLAVE
+
+    SPI_U8_SPDR_REG = u8_a_byte;
+
+    // Notify master to receive data (falling edge)
+    DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_HIGH);
+    DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_LOW);
+
+    while(!GET_BIT(SPI_U8_SPSR_REG, SPI_SPSR_SPIF_BIT));
+
+    u8 u8_l_receivedByte = SPI_U8_SPDR_REG;
+
+    return u8_l_receivedByte;
+//    return STD_OK;
+#endif
 }

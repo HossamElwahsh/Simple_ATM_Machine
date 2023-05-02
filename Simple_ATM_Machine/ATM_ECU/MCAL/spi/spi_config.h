@@ -14,7 +14,7 @@
 
 /******* MACRO HELPERS ********/
 #define EXPAND(x) x
-#define U8_DUMMY_VAL 0xFF
+#define SPI_U8_DUMMY_VAL 0xFF
 
 /******* AVAILABLE OPTIONS ********/
 /* SPI MODES (OPTIONS) */

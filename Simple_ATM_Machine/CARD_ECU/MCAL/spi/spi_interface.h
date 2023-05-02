@@ -25,6 +25,8 @@ void SPI_init();
  */
 u8 SPI_receive(u8 * u8Ptr_a_byte);
 
+u8 SPI_transceiver(u8 u8Ptr_a_byte);
+
 /**
  * Send one byte via SPI
  *
