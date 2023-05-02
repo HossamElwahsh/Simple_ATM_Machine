@@ -199,6 +199,15 @@
     <Compile Include="MCAL\exi\exi_program.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MCAL\gli\gli_interface.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\gli\gli_private.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\gli\gli_program.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MCAL\spi\spi_config.h">
       <SubType>compile</SubType>
     </Compile>
@@ -234,6 +243,7 @@
     <Folder Include="LIB" />
     <Folder Include="MCAL\dio" />
     <Folder Include="MCAL\exi" />
+    <Folder Include="MCAL\gli" />
     <Folder Include="MCAL\spi" />
     <Folder Include="MCAL\timer" />
   </ItemGroup>

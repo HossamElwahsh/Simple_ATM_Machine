@@ -1,44 +1,44 @@
 /*
- * exi_interface.h
+ * uart_interface.h
  *
  *     Created on: Apr 11, 2023
  *         Author: Abdelrhman Walaa - https://github.com/AbdelrhmanWalaa
- *    Description: This file contains all External Interrupt (EXI) functions' prototypes and definitions (Macros) to avoid magic numbers.
+ *    Description: This file contains all Universal Asynchronous Receiver Transmitter (UART) functions' prototypes and definitions (Macros) to avoid magic numbers.
  *  MCU Datasheet: AVR ATmega32 - https://ww1.microchip.com/downloads/en/DeviceDoc/Atmega32A-DataSheet-Complete-DS40002072A.pdf
  */
- 
-#ifndef EXI_INTERFACE_H_
-#define EXI_INTERFACE_H_
+
+#ifndef UART_INTERFACE_H_
+#define UART_INTERFACE_H_
 
 /*******************************************************************************************************************************************************************/
-/* EXI Includes */
+/* UART Includes */
 
 /* LIB */
 #include "../../LIB/std.h"
 #include "../../LIB/bit_math.h"
 
 /*******************************************************************************************************************************************************************/
-/* EXI Macros */
+/* UART Macros */
 
-/* The 3 External Interrupts counted from 0 to 2 */
-#define EXI_U8_INT0						0
-#define EXI_U8_INT1 					1
-#define EXI_U8_INT2 					2
-
-/* Interrupts Sense Control */
-#define EXI_U8_SENSE_LOW_LEVEL			0
-#define EXI_U8_SENSE_LOGICAL_CHANGE		1
-#define EXI_U8_SENSE_FALLING_EDGE		2
-#define EXI_U8_SENSE_RISING_EDGE		3
+/* UART Interruption Modes */
+#define UART_U8_POLLING_MODE      0
+#define UART_U8_RXC_INT_MODE      1
+#define UART_U8_UDRE_INT_MODE     2
 
 /*******************************************************************************************************************************************************************/
-/* EXI Functions' Prototypes */
+/* UART Functions' prototypes */
 
-u8 EXI_enablePIE	 ( u8 u8_a_interruptId, u8 u8_a_senseControl );
-u8 EXI_disablePIE    ( u8 u8_a_interruptId );
+vd UART_initialization ( void );
 
-u8 EXI_intSetCallBack( u8 u8_a_interruptId, void ( *vpf_a_interruptAction ) ( void ) );
+u8 UART_receiveByte    ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte );
+u8 UART_transmitByte   ( u8 u8_a_interruptionMode, u8 u8_a_transmitByte );
+
+u8 UART_transmitString ( u8 *pu8_a_string );
+
+u8 UART_RXCSetCallBack ( void ( *vpf_a_RXCInterruptAction ) ( void ) );
+u8 UART_UDRESetCallBack( void ( *vpf_a_UDREInterruptAction ) ( void ) );
+u8 UART_TXCSetCallBack ( void ( *vpf_a_TXCInterruptAction ) ( void ) );
 
 /*******************************************************************************************************************************************************************/
 
-#endif /* EXTI_INTERFACE_H_ */
+#endif /* UART_INTERFACE_H_ */
