@@ -174,6 +174,14 @@ u8 LCD_setCursor(u8 u8_a_line, u8 u8_a_col) {
     return STD_OK;
 }
 
+/**
+ * Show/Hide cursor
+ * @param u8_a_show hide: 0, show: otherwise
+ */
+void LCD_changeCursor(u8 u8_a_show)
+{
+    LCD_sendCommand(u8_a_show ? LCD_CMD_SHOW_CURSOR : LCD_CMD_HIDE_CURSOR);
+}
 // locations: LCD_CUSTOMCHAR_LOC0 -> LOC7
 
 /**

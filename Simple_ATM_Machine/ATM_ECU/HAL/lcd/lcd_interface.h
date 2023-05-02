@@ -123,6 +123,12 @@ u8 LCD_setCursor(u8 u8_a_line, u8 u8_a_col);
 u8 LCD_storeCustomCharacter(u8 * u8_a_pattern, u8 u8_a_location);
 
 /**
+ * Show/Hide cursor
+ * @param u8_a_show hide: 0, show: otherwise
+ */
+void LCD_changeCursor(u8 u8_a_show);
+
+/**
  * Clears the LCD display
  */
 void LCD_clear(void);

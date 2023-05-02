@@ -18,10 +18,10 @@
 #define LCD_OPT_DISP            1
 
 // Show/Hide Cursor
-#define LCD_OPT_CURSOR          1
+#define LCD_OPT_CURSOR          0
 
 // Enable/Disable Blinking
-#define LCD_OPT_BLINK           1
+#define LCD_OPT_BLINK           0
 
 /* Commands */
 #define LCD_CMD_RETURN_HOME         0x02
@@ -31,6 +31,8 @@
 #define LCD_CMD_CLEAR               0x01
 // Enables or disables Display, Cursor, Blinking
 #define LCD_CMD_DCB  CONCAT4(0b00001,LCD_OPT_DISP, LCD_OPT_CURSOR, LCD_OPT_BLINK)
+#define LCD_CMD_SHOW_CURSOR  CONCAT4(0b00001,LCD_OPT_DISP, 1, LCD_OPT_BLINK)
+#define LCD_CMD_HIDE_CURSOR  CONCAT4(0b00001,LCD_OPT_DISP, 0, LCD_OPT_BLINK)
 
 /* Delays */
 #define LCD_US_DELAY_PULSE  1  //   1 us
