@@ -2,12 +2,12 @@
  * app_interface.h
  *
  *   Created on: Apr 10, 2023
- *       Author: Hacker Kermit - https://github.com/AbdelrhmanWalaa/Moving-Car-Project.git
+ *       Author: Hacker Kermit - https://github.com/HossamElwahsh/Simple_ATM_Machine.git
  *  Description: This file contains all Application (APP) functions' prototypes and definitions (Macros) to avoid magic numbers.
  */ 
 
-#ifndef APP_H_
-#define APP_H_
+#ifndef APP_INTERFACE_H_
+#define APP_INTERFACE_H_
 
 /* APP Includes */
 /* LIB */
@@ -52,4 +52,4 @@ void APP_initialization(void);
 void APP_startProgram(void);
 
 void APP_trigger(void);
-#endif /* APP_H_ */
+#endif /* APP_INTERFACE_H_ */
