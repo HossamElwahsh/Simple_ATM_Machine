@@ -26,6 +26,14 @@ typedef void vd;
 #define STD_OK			1
 #define STD_NOK			0
 
+#ifndef sei
+#define sei()  __asm__ __volatile__ ("sei" ::)
+#endif
+
+#ifndef cli
+#define cli()  __asm__ __volatile__ ("cli" ::)
+#endif
+
 #define NULL	        ( ( void * ) 0 )
 
 #endif /* STD_H_ */
