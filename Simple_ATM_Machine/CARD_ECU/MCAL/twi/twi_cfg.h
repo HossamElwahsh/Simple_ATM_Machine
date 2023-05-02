@@ -6,14 +6,14 @@
  */ 
 
 
-#ifndef I2C_CFG_H_
-#define I2C_CFG_H_
+#ifndef TWI_CFG_H_
+#define TWI_CFG_H_
 
 #include <math.h>
 
 #define F_CPU		     1000000U
 #define SCL_CLK          400000U
-#define MY_ADDRESS		 0x01
+
 
 //#define I2C_PRESCALER    ( ( ( TWI_U8_TWSR_REG & ( 1<< TWPS1 ) ) << 1 ) | ( TWI_U8_TWSR_REG & ( 1<< TWPS0 ) ) )
 
@@ -50,4 +50,4 @@
 #define    TWI_U8_TWDR_REG        * ( ( volatile  u8 * ) 0x23 )
 #define    TWI_U8_TWAR_REG        * ( ( volatile  u8 * ) 0x22 )
 
-#endif /* I2C_CFG_H_ */
+#endif /* TWI_CFG_H_ */
