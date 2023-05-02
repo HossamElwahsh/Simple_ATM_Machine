@@ -37,12 +37,23 @@
 
 /* APP STATES */
 #define APP_STATE_LAUNCH        0
-#define APP_STATE_RUNNING       1
-#define APP_STATE_INSERT_PIN    2
-#define APP_STATE_TRANSACTING   3
-#define APP_STATE_RECEIVING     20
+#define APP_STATE_INSERT_PIN    1
+#define APP_STATE_TRANSACTING   2
 #define APP_STATE_LOCKED        51
 #define APP_STATE_TEST     250
+
+/* APP COMM COMMANDS */
+#define APP_CMD_PIN_READY               0xC1
+#define APP_CMD_WAIT_FOR_SLAVE_REQ      0xC2
+#define APP_CMD_REQ_PAN                 0xC3
+
+/* APP COMM RESPONSES */
+#define APP_RESP_PIN0 0xA0      // Slave requesting PIN digit with index 0
+#define APP_RESP_PIN1 0xA1      // Slave requesting PIN digit with index 1
+#define APP_RESP_PIN2 0xA2      // Slave requesting PIN digit with index 2
+#define APP_RESP_PIN3 0xA3      // Slave requesting PIN digit with index 3
+#define APP_RESP_PIN_OK 0xF0    // Slave response PIN verification OK, PIN match
+#define APP_RESP_PIN_WRONG 0xF5 // Slave response PIN verification fail, Wrong PIN
 
 /* APP Buttons */
 

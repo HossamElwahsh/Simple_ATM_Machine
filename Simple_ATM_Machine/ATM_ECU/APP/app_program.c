@@ -83,8 +83,7 @@ void APP_startProgram(void) {
                 APP_ACTION_SHOW_CURSOR
                 u8 trials = 0;
                 u8 currentPin[5];
-                while(trials < 3)
-                {
+                while(trials < 3) {
                     u8 currentPosition = 0;
 
                     // Poll keypad
@@ -104,15 +103,45 @@ void APP_startProgram(void) {
                     LCD_setCursor(LCD_LINE0, LCD_COL1);
                     LCD_sendString((u8 *) "Please wait...");
                     TIMER_delay_ms(1500);
+
+                    SPI_transceiver(APP_CMD_PIN_READY);
+
+                    u8 u8_l_response = 0;
+                    while (u8_l_response != APP_RESP_PIN_OK && u8_l_response != APP_RESP_PIN_WRONG)
+                    {
+                         u8_l_response = SPI_transceiver(APP_CMD_WAIT_FOR_SLAVE_REQ);
+                        switch (u8_l_response) {
+                            case APP_RESP_PIN0:
+                                SPI_transceiver(currentPin[0]);
+                                break;
+                            case APP_RESP_PIN1:
+                                SPI_transceiver(currentPin[1]);
+                                break;
+                            case APP_RESP_PIN2:
+                                SPI_transceiver(currentPin[2]);
+                                break;
+                            case APP_RESP_PIN3:
+                                SPI_transceiver(currentPin[3]);
+                                break;
+                            default:
+                                // ignore
+                                break;
+                        }
+                    }
+                    if(u8_l_response == APP_RESP_PIN_OK)
+                    {
+                        break;
+                    }else if(u8_l_response == APP_RESP_PIN_WRONG)
+                    {
+                        trials++;
+                        u8 str_l_wrongPinMessage[16];
+                        sprintf((char *) str_l_wrongPinMessage, "Wrong PIN (%d/3)", trials);
+                        LCD_sendString(str_l_wrongPinMessage);
+                        TIMER_delay_ms(700);
+                    }
+
+
                     // todo wait for long 0 press then SPI verify PIN
-                    // if wrong
-                    trials++;
-                    /*u8 str_l_wrongPinMessage[16];
-                    sprintf((char *) str_l_wrongPinMessage, "Wrong PIN (%d/3)", trials);
-                    LCD_sendString(str_l_wrongPinMessage);
-                    TIMER_delay_ms(700);*/
-                    // if OK
-                    break;
                 }
                 APP_ACTION_HIDE_CURSOR
                 if(trials < 3) // PIN OK
@@ -157,32 +186,6 @@ void APP_startProgram(void) {
 
                 APP_ACTION_HIDE_CURSOR
                 break;
-            case APP_STATE_RUNNING:
-//                SPI_send(12);
-                BUZZER_on();
-                TIMER_delay_ms(500);
-                BUZZER_off();
-                TIMER_delay_ms(500);
-//                SPI_send(2);
-//                SPI_send(3);
-//                SPI_send(4);
-//                SPI_send(5);
-//                SPI_send('H'); // 0x48
-
-                if(u8_g_bytesCountToRead > 0) u8_g_appState = APP_STATE_RECEIVING;
-                break;
-            case APP_STATE_RECEIVING: {
-                BUZZER_on();
-                while(u8_g_bytesCountToRead > 0)
-                {
-                    u8 rec = SPI_send('H');
-                    LCD_sendChar(rec);
-                    TIMER_delay_ms(1500);
-//                    u8_g_bytesCountToRead--;
-                }
-                u8_g_appState = APP_STATE_RUNNING;
-                break;
-            }
             default:
                 // Ignored
                 break;
