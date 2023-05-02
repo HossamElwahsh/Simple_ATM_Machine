@@ -1,5 +1,5 @@
 /*
- * main.c
+ * main.h
  *
  *   Created on: May 2, 2023
  *       Author: Hacker Kermit - https://github.com/HossamElwahsh/Simple_ATM_Machine.git
