@@ -112,6 +112,10 @@ void SPI_init()
 u8 SPI_receive(u8 * u8Ptr_a_byte)
 {
 #if SPI_MODE == SPI_MODE_MASTER
+
+    /* Pull SS pin to low to start SPI */
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+
     /* Write dummy data in SPDR */
     SPI_U8_SPDR_REG = U8_DUMMY_VAL;
 
@@ -120,6 +124,10 @@ u8 SPI_receive(u8 * u8Ptr_a_byte)
 
     /* Read data and flush */
     *u8Ptr_a_byte = SPI_U8_SPDR_REG;
+
+    /* Bring SS high again to stop/sync with slave */
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_HIGH);
+
     return STD_OK;
 
 #elif SPI_MODE == SPI_MODE_SLAVE
@@ -156,7 +164,7 @@ u8 SPI_send(u8 u8_a_byte)
     /* flush received noise data */
     u8 u8_l_flushBuffer = SPI_U8_SPDR_REG;
 
-    /* Bring SS high again to stop SPI */
+    /* Bring SS high again to stop/sync with slave */
     DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_HIGH);
 
     return STD_OK;
