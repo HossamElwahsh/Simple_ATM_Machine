@@ -2,12 +2,12 @@
  * app_interface.h
  *
  *   Created on: Apr 10, 2023
- *       Author: Hacker Kermit - https://github.com/AbdelrhmanWalaa/Moving-Car-Project.git
+ *       Author: Hacker Kermit - https://github.com/HossamElwahsh/Simple_ATM_Machine.git
  *  Description: This file contains all Application (APP) functions' prototypes and definitions (Macros) to avoid magic numbers.
  */ 
 
-#ifndef APP_H_
-#define APP_H_
+#ifndef APP_INTERFACE_H_
+#define APP_INTERFACE_H_
 
 /* APP Includes */
 /* LIB */
@@ -20,17 +20,21 @@
 /* MCAL */
 #include "../MCAL/timer/timer_interface.h"
 #include "../MCAL/dio/dio_interface.h"
-#include "../MCAL/dio/dio_private.h"
+#include "../MCAL/spi/spi_interface.h"
+#include "../MCAL/exi/exi_interface.h"
 
-/*HAl*/
-#include "../hAL/lcd/lcd_interface.h"
+/* HAL */
+#include "../HAL/lcd/lcd_interface.h"
 #include "../HAL/kpd/kpd_interface.h"
 #include "../HAL/buzzer/buzzer.h"
+
 /* APP Macros */
 
 /* APP Delays */
 
 /* APP STATES */
+#define APP_STATE_RUNNING   0
+#define APP_STATE_RECEIVING 1
 
 /* APP Buttons */
 
@@ -41,11 +45,12 @@
 /**
  *
  */
-void APP_initialization( void );
+void APP_initialization(void);
 
 /**
  * @return void.
  */
-void APP_startProgram  ( void );
+void APP_startProgram(void);
 
-#endif /* APP_H_ */
+void APP_trigger(void);
+#endif /* APP_INTERFACE_H_ */

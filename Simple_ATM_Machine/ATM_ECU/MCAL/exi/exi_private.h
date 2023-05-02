@@ -6,11 +6,16 @@
  *    Description: This file contains all External Interrupt (EXI) registers' locations and description.
  *  MCU Datasheet: AVR ATmega32 - https://ww1.microchip.com/downloads/en/DeviceDoc/Atmega32A-DataSheet-Complete-DS40002072A.pdf
  */
- 
+
 #ifndef EXI_PRIVATE_H_
 #define EXI_PRIVATE_H_
 
 /* ***********************************************************************************************/
+
+/* Global Interrutpt */
+#define GLOBAL_INTERRUPT_ENABLE_BIT      7
+#define TIMER_U8_SREG_REG            *( ( volatile u8 * ) 0x5F )
+
 /* EXI Registers' Locations */
 
 #define EXI_U8_MCUCR_REG		*( ( volatile u8 * ) 0x55 )

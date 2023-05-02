@@ -8,6 +8,7 @@ include_directories(CARD_ECU/APP)
 include_directories(CARD_ECU/LIB)
 include_directories(CARD_ECU/MCAL/dio)
 include_directories(CARD_ECU/MCAL/timer)
+include_directories(CARD_ECU/MCAL/spi)
 
 add_executable(
         CARD_ECU
@@ -24,4 +25,4 @@ add_executable(
         CARD_ECU/MCAL/timer/timer_private.h
         CARD_ECU/MCAL/timer/timer_program.c
         CARD_ECU/main.c
-        )
+        CARD_ECU/MCAL/spi/spi_program.c)
