@@ -22,7 +22,6 @@
 #include "../MCAL/dio/dio_interface.h"
 #include "../MCAL/spi/spi_interface.h"
 #include "../MCAL/exi/exi_interface.h"
-#include "../MCAL/gli/gli_interface.h"
 
 /* HAL */
 #include "../HAL/lcd/lcd_interface.h"

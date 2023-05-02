@@ -33,7 +33,6 @@ u8 u8_g_bytesCountToRead = 0;
 void APP_initialization(void) {
 	
 	/* MCAL Initialization */
-	GLI_enableGIE();
 	
 	EXI_enablePIE(MASTER_REQ_RECEIVE_INT, MASTER_REQ_RECEIVE_SENSE);
     EXI_intSetCallBack(MASTER_REQ_RECEIVE_INT,APP_trigger);
