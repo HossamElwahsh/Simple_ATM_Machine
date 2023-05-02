@@ -2,7 +2,7 @@
  * exi_interface.h
  *
  *     Created on: Apr 11, 2023
- *         Author: Hacker Kermit - https://github.com/AbdelrhmanWalaa/Moving-Car-Project.git
+ *         Author: Hacker Kermit - https://github.com/HossamElwahsh/Simple_ATM_Machine
  *    Description: This file contains all External Interrupt (EXI) functions' prototypes and definitions (Macros) to avoid magic numbers.
  *  MCU Datasheet: AVR ATmega32 - https://ww1.microchip.com/downloads/en/DeviceDoc/Atmega32A-DataSheet-Complete-DS40002072A.pdf
  */

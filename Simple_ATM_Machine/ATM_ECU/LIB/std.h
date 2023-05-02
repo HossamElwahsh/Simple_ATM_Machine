@@ -2,7 +2,7 @@
  * std.h
  *
  *  Created on: Apr 10, 2023
- *      Author: Hacker Kermit - https://github.com/AbdelrhmanWalaa/Moving-Car-Project.git
+ *      Author: Hacker Kermit - https://github.com/HossamElwahsh/Simple_ATM_Machine
  */
 
 #ifndef STD_H_

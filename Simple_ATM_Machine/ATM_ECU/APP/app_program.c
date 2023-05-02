@@ -2,7 +2,7 @@
  * app_program.c
  *
  *   Created on: Apr 10, 2023
- *       Author: Hacker Kermit - https://github.com/HossamElwahsh/Simple_ATM_Machine.git
+ *       Author: Hossam Elwahsh - https://github.com/HossamElwahsh/Simple_ATM_Machine.git
  *  Description: This file contains all Application (APP) functions' implementation.
  */
 
