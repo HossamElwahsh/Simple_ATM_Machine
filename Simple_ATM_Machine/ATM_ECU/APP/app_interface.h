@@ -21,11 +21,14 @@
 #include "../MCAL/timer/timer_interface.h"
 #include "../MCAL/dio/dio_interface.h"
 #include "../MCAL/dio/dio_private.h"
+#include "../MCAL/spi/spi_interface.h"
+#include "../MCAL/exi/exi_interface.h"
 
 /*HAl*/
 #include "../hAL/lcd/lcd_interface.h"
 #include "../HAL/kpd/kpd_interface.h"
 #include "../HAL/buzzer/buzzer.h"
+
 /* APP Macros */
 
 /* APP Delays */
@@ -41,11 +44,12 @@
 /**
  *
  */
-void APP_initialization( void );
+void APP_initialization(void);
 
 /**
  * @return void.
  */
-void APP_startProgram  ( void );
+void APP_startProgram(void);
 
+void APP_trigger(void);
 #endif /* APP_H_ */

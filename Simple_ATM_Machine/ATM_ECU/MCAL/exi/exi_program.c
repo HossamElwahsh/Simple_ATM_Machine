@@ -39,6 +39,9 @@ u8 EXI_enablePIE	 ( u8 u8_a_interruptId, u8 u8_a_senseControl )
 	/* Check 1: InterruptId and the Sense Control are in the valid range */
 	if ( ( u8_a_interruptId <= EXI_U8_INT2 ) && ( u8_a_senseControl <= EXI_U8_SENSE_RISING_EDGE ) )
 	{
+        /* 1.0 Enable Global Interrupt Flag */
+        SET_BIT(TIMER_U8_SREG_REG, GLOBAL_INTERRUPT_ENABLE_BIT);
+
 		/* Check 1.1: Required InterruptId */
 		switch ( u8_a_interruptId )
 		{
