@@ -46,29 +46,6 @@ void APP_initialization(void) {
 	LCD_clear();    // Clear LCD's display
 
     APP_switchState(u8_g_appState); // switch to entry point state
-    return;
-
-    LCD_sendString((u8 *)"STARTING...");
-    LCD_setCursor(LCD_LINE1, LCD_COL0);
-
-    LCD_sendString((u8 *) "Sending: ");
-
-    // ss enable
-    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
-    u8 count = 0;
-    char buffer[5];
-    while(1)
-    {
-        SPI_send(count);
-        sprintf(buffer, "%d", count);
-        LCD_setCursor(LCD_LINE1, LCD_COL10);
-        LCD_sendString((u8 *) buffer);
-        count++;
-        TIMER_delay_ms(1000);
-    }
-
-
-//    SPI_send('H');
 }
 
 
@@ -76,6 +53,27 @@ void APP_startProgram(void) {
     while(1)
     {
         switch (u8_g_appState) {
+            case APP_STATE_TEST:
+                LCD_sendString((u8 *)"STARTING...");
+                LCD_setCursor(LCD_LINE1, LCD_COL0);
+
+                LCD_sendString((u8 *) "Sending: ");
+
+                // ss enable
+                DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+                u8 count = 0;
+                char buffer[5];
+                while(1)
+                {
+                    SPI_transceiver(count);
+                    sprintf(buffer, "%d", count);
+                    LCD_setCursor(LCD_LINE1, LCD_COL10);
+                    LCD_sendString((u8 *) buffer);
+                    count++;
+                    TIMER_delay_ms(1000);
+                    if(count == 250) count = 0;
+                }
+                break;
             case APP_STATE_LAUNCH:
                 // no more actions waiting for interrupt signal from CARD ECU
                 break;
@@ -153,6 +151,8 @@ void APP_startProgram(void) {
                         currentPosition = 0;
                         LCD_setCursor(LCD_LINE1, LCD_COL4);
                     }
+
+                    // todo
                 }
 
                 APP_ACTION_HIDE_CURSOR
@@ -202,11 +202,11 @@ void APP_switchState(u8 u8_a_state){
     LCD_clear();
     switch (u8_a_state) {
         case  APP_STATE_LAUNCH:
-            LCD_sendString((u8 *)" Welcome to ATM");  // Display welcome message on LCD for 1 second
+            LCD_sendString((u8 *)" Welcome to ATM");    // Display welcome message on LCD for 1 second
             LCD_sendString((u8 *)"\n Hacker  Kermit");  // Display team name
             TIMER_delay_ms(APP_DELAY_WELCOME_MSG);
             LCD_clear();
-            LCD_sendString((u8 *) "  Insert Card");  // Display Insert card message and wait
+            LCD_sendString((u8 *) "  Insert Card");     // Display Insert card message and wait
             break;
         case APP_STATE_INSERT_PIN:
             LCD_setCursor(LCD_LINE0, LCD_COL1);  // Center of first line for the next msg
@@ -215,10 +215,10 @@ void APP_switchState(u8 u8_a_state){
             LCD_sendString((u8 *) "____");              // Display Placeholders for PIN
             break;
         case APP_STATE_TRANSACTING:
-            LCD_setCursor(LCD_LINE0, LCD_COL2);     // Center of first line for the next msg
-            LCD_sendString((u8 *) "Enter Amount");         // Display "Enter Amount" message and wait
-            LCD_setCursor(LCD_LINE1, LCD_COL4);     // Center of first line for the next msg
-            LCD_sendString((u8 *) "0000.00");              // Display Placeholders for Amount
+            LCD_setCursor(LCD_LINE0, LCD_COL2);  // Center of first line for the next msg
+            LCD_sendString((u8 *) "Enter Amount");      // Display "Enter Amount" message and wait
+            LCD_setCursor(LCD_LINE1, LCD_COL4);  // Center of first line for the next msg
+            LCD_sendString((u8 *) "0000.00");           // Display Placeholders for Amount
 
             break;
         case APP_STATE_LOCKED:
@@ -236,8 +236,5 @@ void APP_switchState(u8 u8_a_state){
 // Ran when an INT0 interrupt is fired / Card inserted
 void APP_trigger(void) {
     // receive SPI data
-    APP_switchState(APP_STATE_INSERT_PIN);
-//    u8_g_bytesCountToRead++;
-//    if(u8_g_bytesCountToRead > 250) u8_g_bytesCountToRead = 1;
-//    u8_g_appState = APP_STATE_RECEIVING;
+    if(u8_g_appState == APP_STATE_LAUNCH) APP_switchState(APP_STATE_INSERT_PIN);
 }

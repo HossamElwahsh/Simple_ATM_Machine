@@ -42,7 +42,7 @@
 #define APP_STATE_TRANSACTING   3
 #define APP_STATE_RECEIVING     20
 #define APP_STATE_LOCKED        51
-#define APP_STATE_TEST     999
+#define APP_STATE_TEST     250
 
 /* APP Buttons */
 
