@@ -1,16 +1,21 @@
 /*
- * exi_private.h
+ * EXI_Private.h
  *
  *     Created on: Apr 11, 2023
  *         Author: Abdelrhman Walaa - https://github.com/AbdelrhmanWalaa
  *    Description: This file contains all External Interrupt (EXI) registers' locations and description.
  *  MCU Datasheet: AVR ATmega32 - https://ww1.microchip.com/downloads/en/DeviceDoc/Atmega32A-DataSheet-Complete-DS40002072A.pdf
  */
- 
+
 #ifndef EXI_PRIVATE_H_
 #define EXI_PRIVATE_H_
 
-/*******************************************************************************************************************************************************************/
+/* ***********************************************************************************************/
+
+/* Global Interrutpt */
+#define GLOBAL_INTERRUPT_ENABLE_BIT      7
+#define TIMER_U8_SREG_REG            *( ( volatile u8 * ) 0x5F )
+
 /* EXI Registers' Locations */
 
 #define EXI_U8_MCUCR_REG		*( ( volatile u8 * ) 0x55 )
@@ -18,7 +23,7 @@
 #define EXI_U8_GICR_REG			*( ( volatile u8 * ) 0x5B )
 #define EXI_U8_GIFR_REG			*( ( volatile u8 * ) 0x5A )
 
-/*******************************************************************************************************************************************************************/
+/* ***********************************************************************************************/
 /* EXI Registers' Description */
 
 /* MCU Control Register - MCUCR: Configure External Interrupt 0 & 1 */
@@ -59,6 +64,6 @@
 #define EXI_U8_INTF2_BIT	    5
 /* End of GIFR Register */
 
-/*******************************************************************************************************************************************************************/
+/* ***********************************************************************************************/
 
 #endif /* EXI_PRIVATE_H_ */

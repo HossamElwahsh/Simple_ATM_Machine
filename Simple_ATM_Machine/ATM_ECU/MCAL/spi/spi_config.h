@@ -10,10 +10,11 @@
 #define SPI_CONFIG_H_
 
 #include "../dio/dio_interface.h"
+#include "../exi/exi_interface.h"
 
 /******* MACRO HELPERS ********/
 #define EXPAND(x) x
-#define U8_DUMMY_VAL 0xFF
+#define SPI_U8_DUMMY_VAL 0xFF
 
 /******* AVAILABLE OPTIONS ********/
 /* SPI MODES (OPTIONS) */
@@ -44,7 +45,7 @@
 /* MASTER / SLAVE TRIGGERS */
 
 #define MASTER_REQ_RECEIVE_INT      EXPAND(EXI_U8_INT0)
-#define MASTER_REQ_RECEIVE_SENSE    EXPAND(EXI_U8_SENSE_FALLING_EDGE)
+#define MASTER_REQ_RECEIVE_SENSE    EXPAND(EXI_U8_SENSE_RISING_EDGE)
 
 // GPIO pin for slave mode to notify master to receive next data from slave
 #define SPI_SLAVE_SEND_NOTIFY_PIN EXPAND(DIO_U8_PIN_0)

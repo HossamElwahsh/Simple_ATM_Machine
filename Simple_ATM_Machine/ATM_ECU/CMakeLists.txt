@@ -7,6 +7,7 @@ include_directories(ATM_ECU/)
 include_directories(ATM_ECU/APP)
 include_directories(ATM_ECU/HAL/lcd)
 include_directories(ATM_ECU/HAL/temp_sensor)
+include_directories(ATM_ECU/HAL/mbtn)
 include_directories(ATM_ECU/LIB)
 include_directories(ATM_ECU/MCAL/dio)
 include_directories(ATM_ECU/MCAL/timer)
@@ -36,4 +37,5 @@ add_executable(
         ATM_ECU/main.c
         ATM_ECU/HAL/kpd/kpd_program.c
         ATM_ECU/HAL/buzzer/buzzer.c
-        ATM_ECU/MCAL/exi/exi_program.c)
+        ATM_ECU/MCAL/exi/exi_program.c
+        ATM_ECU/HAL/mbtn/mbtn_program.c)

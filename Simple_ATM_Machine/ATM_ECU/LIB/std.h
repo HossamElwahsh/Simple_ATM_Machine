@@ -2,7 +2,7 @@
  * std.h
  *
  *  Created on: Apr 10, 2023
- *      Author: Hacker Kermit - https://github.com/AbdelrhmanWalaa/Moving-Car-Project.git
+ *      Author: Hacker Kermit - https://github.com/HossamElwahsh/Simple_ATM_Machine
  */
 
 #ifndef STD_H_
@@ -27,5 +27,13 @@ typedef void vd;
 #define STD_NOK			0
 
 #define NULL	        ( ( void * ) 0 )
+
+#ifndef sei
+#define sei()  __asm__ __volatile__ ("sei" ::)
+#endif
+
+#ifndef cli
+#define cli()  __asm__ __volatile__ ("cli" ::)
+#endif
 
 #endif /* STD_H_ */
