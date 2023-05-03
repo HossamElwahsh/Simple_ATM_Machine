@@ -33,7 +33,7 @@
 ---------
 
 ## Circuit Schematic
-![Proteus Simulation](Simulation/Simulation.png)
+![Proteus Simulation](Documents/Images/Simple_ATM_Machine_Schematic_LQ.jpg)
 
 ## Layered Architecture
-![Layered Architecture](Documents/Flowcharts%20-%20drawio%20files/png/LayeredArchitecture_crop.drawio.png)
+![Layered Architecture]()
