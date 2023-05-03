@@ -11,6 +11,38 @@ void EEPROM_init(void)
 	TWI_init(); // just initialize the TWI module inside the MC
 }
 
+
+EN_eepromError_t EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr)
+{
+	u8 i = 0, x = 0;
+	u16 j = u16_l_byteAddress;
+	while (pstr[i] != '\0')
+	{
+		x = EEPROM_writeByte(j++, pstr[i++]);
+		TIMER_delay_ms(10);
+		if (0 == x)
+			return EEPROM_ERROR;
+	}
+	EEPROM_writeByte(j, '\0');
+	TIMER_delay_ms(10);
+	return EEPROM_SUCCESS;
+}
+
+u8* EEPROM_readArray(u16 u16_l_byteAddress)
+{
+	u8 i = 0;
+	static u8 arr[20];
+	do {
+		EEPROM_readByte(u16_l_byteAddress, &arr[i]);
+		TIMER_delay_ms(10);
+		u16_l_byteAddress++;
+		i++;
+	} while ((arr[i - 1] != '\0') && (i != 19));
+	arr[i] = '\0';
+	return arr;
+}
+
+
 #ifdef EEPROM_24C16B
 
 EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
@@ -81,36 +113,6 @@ EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 	}
 	TWI_stop();
 	return EEPROM_SUCCESS;
-}
-
-EN_eepromError_t EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr)
-{
-	u8 i = 0, x = 0;
-	u16 j = u16_l_byteAddress;
-	while (pstr[i] != '\0')
-	{
-		x = EEPROM_writeByte(j++, pstr[i++]);
-		TIMER_delay_ms(10);
-		if (0 == x)
-			return EEPROM_ERROR;
-	}
-	EEPROM_writeByte(j, '\0');
-	TIMER_delay_ms(10);
-	return EEPROM_SUCCESS;
-}
-
-u8* EEPROM_readArray(u16 u16_l_byteAddress)
-{
-	u8 i = 0;
-	static u8 arr[20];
-	do {
-		EEPROM_readByte(u16_l_byteAddress, &arr[i]);
-		TIMER_delay_ms(10);
-		u16_l_byteAddress++;
-		i++;
-	} while ((arr[i - 1] != '\0') && (i != 19));
-	arr[i] = '\0';
-	return arr;
 }
 
 #else
