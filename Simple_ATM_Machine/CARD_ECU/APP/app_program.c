@@ -30,17 +30,15 @@ void APP_initialization( void )
 	LCD_init();     // Init LCD
 	LCD_clear();    // Clear LCD's display
 
-//    u8 count;
-//    char buffer[5];
-//
-//    SPI_init();
-//
-//
-//    while(1)
-//    {
-//        u8 data;
-//        count = SPI_receive(&data);
-//    }
+
+    u8 count = SPI_U8_DUMMY_VAL;
+
+    SPI_init();
+
+    while(1)
+    {
+        count = SPI_transceiver(count);
+    }
 }
 
 /*******************************************************************************************************************************************************************/

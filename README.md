@@ -13,10 +13,10 @@
 ## Quick Links
 > - `Project Documentation`
     >     👉 [PDF]()
-    >     👉 [Google Docs]()
+    >     👉 [Google Docs](https://docs.google.com/document/d/1Tz5IJziaRbRw-O9JCpY1Yb374tjboJ_zGpGwjSU8gU4/edit?usp=sharing)
 > - `Video` 👉 [Watch on Youtube]()
-> - `Team Backlog` 👉 [Google Sheets]() 👉 [Excel]()
-> - `Test Protocol` 👉 [Google Sheets]() 👉 [Excel]()
+> - `Team Backlog` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing) 👉 [Excel]()
+> - `Test Protocol` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing#gid=320715025) 👉 [Excel]()
 > - ---
 > ### Technical
 > - `Proteus Simulation (Proteus 8.13)` 👉 [Simulation_8.13](Simulation/Simple_ATM_Machine.pdsprj)
@@ -33,7 +33,7 @@
 ---------
 
 ## Circuit Schematic
-![Proteus Simulation](Simulation/Simulation.png)
+![Proteus Simulation](Documents/Images/Simple_ATM_Machine_Schematic_LQ.jpg)
 
 ## Layered Architecture
-![Layered Architecture](Documents/Flowcharts%20-%20drawio%20files/png/LayeredArchitecture_crop.drawio.png)
+![Layered Architecture]()

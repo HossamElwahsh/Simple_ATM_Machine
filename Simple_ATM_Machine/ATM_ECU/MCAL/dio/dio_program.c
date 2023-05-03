@@ -154,15 +154,9 @@ EN_DIO_ERROR_T DIO_write(u8 u8_a_pinNumber, EN_DIO_PORT_T en_a_portNumber, u8 u8
             }
             break;
         case PORT_C:
-            if (u8_a_value == DIO_U8_PIN_HIGH) {
-               WRITE_BIT(DIO_U8_PORT_C_REG, u8_a_pinNumber, u8_a_value);
-				//SET_BIT(DIO_U8_PORT_C_REG, u8_a_pinNumber);
-			//}
-			//else if(u8_a_value == DIO_U8_PIN_LOW)
-			//{
-			//	CLR_BIT(DIO_U8_PORT_C_REG, u8_a_pinNumber);
-			}
-             else {
+            if (u8_a_value == DIO_U8_PIN_HIGH || u8_a_value == DIO_U8_PIN_LOW) {
+                WRITE_BIT(DIO_U8_PORT_C_REG, u8_a_pinNumber, u8_a_value);
+            } else {
                 // error handling
                 return DIO_ERROR;
             }
