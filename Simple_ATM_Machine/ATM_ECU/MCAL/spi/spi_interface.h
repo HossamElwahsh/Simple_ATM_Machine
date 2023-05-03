@@ -26,4 +26,14 @@ void SPI_init();
  */
 u8 SPI_transceiver(u8 u8Ptr_a_byte);
 
+/**
+ * Syncs and restarts SPI communications between Master and Slave by setting SS pin High then Low again
+ */
+void SPI_restart();
+
+/**
+ * stops SPI communications by setting SS pin to HIGH
+ */
+void SPI_stop();
+
 #endif /* SPI_INTERFACE_H_ */

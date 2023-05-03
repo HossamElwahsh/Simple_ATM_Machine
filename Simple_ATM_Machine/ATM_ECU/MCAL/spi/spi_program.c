@@ -87,6 +87,9 @@ void SPI_init()
     /* SPI Enable */
     SET_BIT(SPI_U8_SPCR_REG, SPI_SPCR_SPE_BIT);
 
+    /* SET slave select pin to low to start communications */
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+
 #elif SPI_MODE == SPI_MODE_SLAVE
     /* Init SPI port pins */
     DIO_portInit(SPI_PORT, DIO_PORT_IN, SPI_SLAVE_IN_PINS);
@@ -122,9 +125,6 @@ u8 SPI_transceiver(u8 u8_a_byte)
 /* Note: SPIF flag is cleared by first reading SPSR (with SPIF set) and then accessing SPDR hence flush buffer used here to access SPDR after SPSR read */
     return flush_buffer;
 
-/* write data to SPI data register */
-    SPI_U8_SPDR_REG = u8_a_byte;
-
 #elif SPI_MODE == SPI_MODE_SLAVE
 
     SPI_U8_SPDR_REG = u8_a_byte;
@@ -139,4 +139,22 @@ u8 SPI_transceiver(u8 u8_a_byte)
 
     return u8_l_receivedByte;
 #endif
+}
+
+/**
+ * Syncs and restarts SPI communications between Master and Slave by setting SS pin High then Low again
+ */
+void SPI_restart()
+{
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_HIGH);
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+}
+
+
+/**
+ * stops SPI communications by setting SS pin to HIGH
+ */
+void SPI_stop()
+{
+    DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_HIGH);
 }

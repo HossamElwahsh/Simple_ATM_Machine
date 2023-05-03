@@ -3,7 +3,7 @@
  *
  * Created: 1/5/2023 5:18:17 PM
  *  Author: Hossam
- */ 
+ */
 
 
 #ifndef SPI_INTERFACE_H_
@@ -16,6 +16,7 @@
  */
 void SPI_init();
 
+
 /**
  * Receive and Transmit one byte via SPI
  *
@@ -24,5 +25,15 @@ void SPI_init();
  * @return Received byte
  */
 u8 SPI_transceiver(u8 u8Ptr_a_byte);
+
+/**
+ * Syncs and restarts SPI communications between Master and Slave by setting SS pin High then Low again
+ */
+void SPI_restart();
+
+/**
+ * stops SPI communications by setting SS pin to HIGH
+ */
+void SPI_stop();
 
 #endif /* SPI_INTERFACE_H_ */
