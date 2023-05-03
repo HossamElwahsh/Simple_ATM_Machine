@@ -11,7 +11,10 @@
 
 #include <math.h>
 
-#define F_CPU		     1000000U
+#ifndef F_CPU
+#define F_CPU								1000000UL
+#endif
+
 #define SCL_CLK          400000U
 
 
