@@ -211,4 +211,3 @@ u8 decimal_to_hex(u8 val)
 	hex = ((msb << 4) + lsb);
 	return hex;
 }
-
