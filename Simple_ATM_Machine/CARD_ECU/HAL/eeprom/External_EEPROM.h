@@ -34,7 +34,8 @@ u8 EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData);
 u8* EEPROM_readArray(u16 u16_l_byteAddress);
 u8 EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr);
 #else
-#define BYTE_ADDRESS			 0x6D18
+#define BYTE_ADDRESS			 0x6D16
+#define EEPROM_ADDRESS			 0xA0
 #define MANDATORY_SEQUENCE		 0xA0   // 10100 
 #define	PAGE_MASK_256			 0x00FF
 #define NEDDED_SHIFT_TIMES_256	 7	
