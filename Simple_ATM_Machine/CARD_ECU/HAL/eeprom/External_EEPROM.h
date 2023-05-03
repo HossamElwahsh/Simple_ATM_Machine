@@ -41,8 +41,8 @@ typedef enum {
 #endif 
 
 void EEPROM_init(void);
-u8 EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData);
-u8 EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData);
+u8* EEPROM_readArray(u16 u16_l_byteAddress);
+EN_eepromError_t EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr);
 
  
 #endif /* EXTERNAL_EEPROM_H_ */
