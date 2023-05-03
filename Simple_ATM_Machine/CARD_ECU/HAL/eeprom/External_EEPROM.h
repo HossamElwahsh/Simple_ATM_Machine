@@ -15,8 +15,10 @@
 #include "../../LIB/bit_math.h"
 #include "../../LIB/std.h"
 
-#define EEPROM_ERROR 0
-#define EEPROM_SUCCESS 1
+typedef enum {
+	EEPROM_ERROR,
+	EEPROM_SUCCESS
+}EN_eepromError_t;
 #define BYTE_ADDRESS   0x0001
 
 #ifdef EEPROM_24C256B
