@@ -73,7 +73,7 @@ void APP_startProgram(void) {
                 LCD_sendString((u8 *) "Sending: ");
 
                 // ss enable
-                DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+//                DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
                 u8 count = 0;
                 char buffer[5];
                 while (1) {
@@ -82,9 +82,23 @@ void APP_startProgram(void) {
                     LCD_setCursor(LCD_LINE1, LCD_COL10);
                     LCD_sendString((u8 *) buffer);
                     count++;
-                    TIMER_delay_ms(1000);
-                    if (count == 250) count = 0;
+                    TIMER_delay_ms(100);
+                    if (count == 8) {
+                        count = 0;
+                        SPI_stop();
+                    }
                 }
+
+                /* Receiver test slave code */
+                /*u8 count = SPI_U8_DUMMY_VAL;
+
+                SPI_init();
+
+                while(1)
+                {
+                    count = SPI_transceiver(count);
+                }*/
+
                 break;
             case APP_STATE_LAUNCH:
                 // ignored
