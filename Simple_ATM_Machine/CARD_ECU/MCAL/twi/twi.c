@@ -3,11 +3,20 @@
  *
  * Created: 5/1/2023 4:23:43 PM
  *  Author: Mahmoud Mowafey
- */ 
+ */
 
 #include "twi.h"
 
-void TWI_Init(void)
+ /*
+ * initializing the I2C protocol
+ *
+ * Parameters
+ *       	[in] void
+ * Return
+ *   	    [out] void
+ *
+ */
+void TWI_init(void)
 {
     /* Bit Rate: 400.000 kbps using zero pre-scaler TWPS=00 and F_CPU=8Mhz */
     TWI_U8_TWBR_REG = 0x02;
@@ -20,7 +29,16 @@ void TWI_Init(void)
     TWI_U8_TWCR_REG = (1 << TWEN); /* enable TWI */
 }
 
-void TWI_Start(void)
+/*
+* Send the start bit to start the I2C frame
+*
+* Parameters
+*       	[in] void
+* Return
+*   	[out] void
+*
+*/
+void TWI_start(void)
 {
     /*
      * Clear the TWINT flag before sending the start bit TWINT=1
@@ -33,7 +51,16 @@ void TWI_Start(void)
     while (BIT_IS_CLEAR(TWI_U8_TWCR_REG, TWINT));
 }
 
-void TWI_Stop(void)
+/*
+* Send the stop bit to stop the I2C frame
+*
+* Parameters
+*       	[in] void
+* Return
+*   	[out] void
+*
+*/
+void TWI_stop(void)
 {
     /*
      * Clear the TWINT flag before sending the stop bit TWINT=1
@@ -43,7 +70,16 @@ void TWI_Stop(void)
     TWI_U8_TWCR_REG = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN);
 }
 
-void TWI_Write(u8 data)
+/*
+* write one byte via I2C
+*
+* Parameters
+*       	[in] data
+* Return
+*   	   [out] void
+*
+*/
+void TWI_write(u8 data)
 {
     /* Put data On TWI data Register */
     TWI_U8_TWDR_REG = data;
@@ -56,7 +92,16 @@ void TWI_Write(u8 data)
     while (BIT_IS_CLEAR(TWI_U8_TWCR_REG, TWINT));
 }
 
-u8 TWI_Read_With_ACK(void)
+/*
+* read one byte with send Ack via I2C
+*
+* Parameters
+*       	[in] void
+* Return
+*   	Received byte
+*
+*/
+u8 TWI_readWithAck(void)
 {
     /*
      * Clear the TWINT flag before reading the data TWINT=1
@@ -70,7 +115,16 @@ u8 TWI_Read_With_ACK(void)
     return TWI_U8_TWDR_REG;
 }
 
-u8 TWI_Read_With_NACK(void)
+/*
+* read one byte with send NAck via I2C
+*
+* Parameters
+*       	[in] void
+* Return
+*   	Received byte
+*
+*/
+u8 TWI_readWithNAck(void)
 {
     /*
      * Clear the TWINT flag before reading the data TWINT=1
@@ -83,7 +137,16 @@ u8 TWI_Read_With_NACK(void)
     return TWI_U8_TWDR_REG;
 }
 
-u8 TWI_Get_Status(void)
+/*
+* check the last operation via get the data of status register
+*
+* Parameters
+*       	[in] void
+* Return
+*   	current status
+*
+*/
+u8 TWI_getStatus(void)
 {
     u8 status;
     /* masking to eliminate first 3 bits and get the last 5 bits (status bits) */
