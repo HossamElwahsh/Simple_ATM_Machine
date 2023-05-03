@@ -45,7 +45,7 @@ static const u16 Au16_gs_UBRRValuesDoubleSpeed[6][8] = { {  51   ,  25   ,  12  
  Output: void
  Description: Function to initialize UART peripheral.
 */
-vd UART_initialization ( void )
+vd UART_initialization  ( void )
 {
     /* The UBRRH Register shares the same I/O location as the UCSRC Register. Therefore some special consideration must be taken when accessing this I/O location. */
     /* When doing a write access of this I/O location, the high bit of the value written, the USART Register Select ( URSEL -> 8th ) bit, controls which one of the two registers that will be written. 
@@ -186,9 +186,9 @@ vd UART_initialization ( void )
  Name: UART_receiveByte
  Input: u8 InterruptionMode and Pointer to u8 ReturnedReceiveByte
  Output: u8 Error or No Error
- Description: Function to Receive Byte using both Polling and Interrupt Modes.
+ Description: Function to Receive Byte using both Polling and Interrupt Modes, with Timeout mechanism..
 */
-u8 UART_receiveByte    ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte )
+u8 UART_receiveByte     ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte )
 {
     /* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
@@ -247,12 +247,60 @@ u8 UART_receiveByte    ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte
 
 /*******************************************************************************************************************************************************************/
 /*
+ Name: UART_receiveByteBlock
+ Input: u8 InterruptionMode and u8 Pointer to u8 ReturnedReceiveByte
+ Output: u8 Error or No Error
+ Description: Function to Receive Byte using both Polling and Interrupt Modes, without Timeout mechanism.
+*/
+u8 UART_receiveByteBlock( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte )
+{
+	/* Define local variable to set the error state = OK */
+	u8 u8_l_errorState = STD_OK;
+
+	/* Check 1: InterruptionMode is in the valid range, and Pointer is not equal to NULL */
+	if ( ( u8_a_interruptionMode <= UART_U8_RXC_INT_MODE ) && ( pu8_a_returnedReceiveByte != NULL ) )
+	{
+		/* Check 1.1: Required InterruptionMode */
+		switch ( u8_a_interruptionMode )
+		{
+			case UART_U8_POLLING_MODE:
+			
+				/* Step 1: Wait ( Poll ) until Byte is Received ( i.e. until Flag ( RXC ) = 1 ), taking into consideration TimeOutCounter */
+				while ( GET_BIT( UART_U8_UCSRA_REG, UART_U8_RXC_BIT ) == 0 );
+				/* Step 2: Clear the flag ( RXC ) by writing logical one, because this is Polling Mode. */
+				SET_BIT( UART_U8_UCSRA_REG, UART_U8_RXC_BIT );
+
+				/* Step 3: Get the Received Byte from the UART register -> ( UDR register ). */
+				*pu8_a_returnedReceiveByte = UART_U8_UDR_REG;
+		
+			break;
+
+			case UART_U8_RXC_INT_MODE:
+
+				/* Get the Received Byte from the UART register -> ( UDR register ). */
+				*pu8_a_returnedReceiveByte = UART_U8_UDR_REG;
+
+			break;
+		}
+	}
+	/* Check 2: InterruptionMode is not in the valid range, or Pointer is equal to NULL */
+	else
+	{
+		/* Update error state = NOK, wrong InterruptionMode or Pointer is NULL! */
+		u8_l_errorState = STD_NOK;
+	}
+
+	return u8_l_errorState;	
+}
+
+/*******************************************************************************************************************************************************************/
+/*
  Name: UART_transmitByte
  Input: u8 InterruptionMode and u8 TransmitByte
  Output: u8 Error or No Error
- Description: Function to Transmit Byte using both Polling and Interrupt Modes.
+ Description: Function to Transmit Byte using both Polling and Interrupt Modes, with Timeout mechanism.
 */
-u8 UART_transmitByte   ( u8 u8_a_interruptionMode, u8 u8_a_transmitByte )
+u8 UART_transmitByte    ( u8 u8_a_interruptionMode, u8 u8_a_transmitByte )
 {
     /* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
@@ -316,7 +364,7 @@ u8 UART_transmitByte   ( u8 u8_a_interruptionMode, u8 u8_a_transmitByte )
  Output: u8 Error or No Error
  Description: Function to Transmit String.
 */
-u8 UART_transmitString ( u8 *pu8_a_string )
+u8 UART_transmitString  ( u8 *pu8_a_string )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
@@ -349,7 +397,7 @@ u8 UART_transmitString ( u8 *pu8_a_string )
  Description: Function to receive an address of a function ( in APP Layer ) to be called back in ISR function,
   	  	  	  the address is passed through a pointer to function ( RXCInterruptAction ), and then pass this address to ISR function.
 */
-u8 UART_RXCSetCallBack ( void ( *vpf_a_RXCInterruptAction ) ( void ) )
+u8 UART_RXCSetCallBack  ( void ( *vpf_a_RXCInterruptAction ) ( void ) )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
@@ -378,7 +426,7 @@ u8 UART_RXCSetCallBack ( void ( *vpf_a_RXCInterruptAction ) ( void ) )
  Description: Function to receive an address of a function ( in APP Layer ) to be called back in ISR function,
   	  	  	  the address is passed through a pointer to function ( UDREInterruptAction ), and then pass this address to ISR function.
 */
-u8 UART_UDRESetCallBack( void ( *vpf_a_UDREInterruptAction ) ( void ) )
+u8 UART_UDRESetCallBack ( void ( *vpf_a_UDREInterruptAction ) ( void ) )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
@@ -407,7 +455,7 @@ u8 UART_UDRESetCallBack( void ( *vpf_a_UDREInterruptAction ) ( void ) )
  Description: Function to receive an address of a function ( in APP Layer ) to be called back in ISR function,
   	  	  	  the address is passed through a pointer to function ( TXCInterruptAction ), and then pass this address to ISR function.
 */
-u8 UART_TXCSetCallBack ( void ( *vpf_a_TXCInterruptAction ) ( void ) )
+u8 UART_TXCSetCallBack  ( void ( *vpf_a_TXCInterruptAction ) ( void ) )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;

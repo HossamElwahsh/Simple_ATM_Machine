@@ -15,16 +15,19 @@
 /* LIB */
 #include "../LIB/std.h"
 #include "../LIB/bit_math.h"
+//#include <stdio.h>
+#include <string.h>
 
 /* MCAL */
 #include "../MCAL/dio/dio_interface.h"
-#include "../MCAL/timer/timer_interface.h"
-//#include "../MCAL/i2c/i2c_interface.h"
-#include "../MCAL/spi/spi_interface.h"
+//#include "../MCAL/timer/timer_interface.h"
+//#include "../MCAL/twi/twi.h"
+//#include "../MCAL/spi/spi_interface.h"
 #include "../MCAL/uart/uart_interface.h"
 
 /* HAL */
-//#include "../HAL/eeprom/eeprom_interface.h"
+//#include "../HAL/eeprom/External_EEPROM.h"
+#include "../HAL/lcd/lcd_interface.h"
 
 /*******************************************************************************************************************************************************************/
 /* APP Macros */

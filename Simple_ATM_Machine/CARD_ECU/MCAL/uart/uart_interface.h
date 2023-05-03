@@ -30,14 +30,15 @@
 
 vd UART_initialization ( void );
 
-u8 UART_receiveByte    ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte );
-u8 UART_transmitByte   ( u8 u8_a_interruptionMode, u8 u8_a_transmitByte );
+u8 UART_receiveByte     ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte );
+u8 UART_receiveByteBlock( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte );
+u8 UART_transmitByte    ( u8 u8_a_interruptionMode, u8 u8_a_transmitByte );
 
-u8 UART_transmitString ( u8 *pu8_a_string );
-
-u8 UART_RXCSetCallBack ( void ( *vpf_a_RXCInterruptAction ) ( void ) );
-u8 UART_UDRESetCallBack( void ( *vpf_a_UDREInterruptAction ) ( void ) );
-u8 UART_TXCSetCallBack ( void ( *vpf_a_TXCInterruptAction ) ( void ) );
+u8 UART_transmitString  ( u8 *pu8_a_string );
+					    
+u8 UART_RXCSetCallBack  ( void ( *vpf_a_RXCInterruptAction ) ( void ) );
+u8 UART_UDRESetCallBack ( void ( *vpf_a_UDREInterruptAction ) ( void ) );
+u8 UART_TXCSetCallBack  ( void ( *vpf_a_TXCInterruptAction ) ( void ) );
 
 /*******************************************************************************************************************************************************************/
 

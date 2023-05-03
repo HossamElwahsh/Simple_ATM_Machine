@@ -138,10 +138,16 @@
     <Compile Include="APP\app_program.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\eeprom\External_EEPROM.c">
+    <Compile Include="HAL\lcd\lcd_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\eeprom\External_EEPROM.h">
+    <Compile Include="HAL\lcd\lcd_interface.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="HAL\lcd\lcd_private.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="HAL\lcd\lcd_program.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="LIB\bit_math.h">
@@ -192,15 +198,6 @@
     <Compile Include="MCAL\timer\timer_program.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="MCAL\twi\twi.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="MCAL\twi\twi.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="MCAL\twi\twi_cfg.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="MCAL\uart\uart_config.h">
       <SubType>compile</SubType>
     </Compile>
@@ -216,12 +213,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APP" />
-    <Folder Include="HAL\eeprom" />
+    <Folder Include="HAL\lcd\" />
     <Folder Include="MCAL" />
     <Folder Include="HAL" />
     <Folder Include="LIB" />
     <Folder Include="MCAL\dio" />
-    <Folder Include="MCAL\twi" />
     <Folder Include="MCAL\uart" />
     <Folder Include="MCAL\spi\" />
     <Folder Include="MCAL\timer" />
