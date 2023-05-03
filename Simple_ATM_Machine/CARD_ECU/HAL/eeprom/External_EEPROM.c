@@ -1,3 +1,9 @@
+/*
+ * External_EEPROM.c
+ * Created: 3/5/2023 3:40 AM
+ * Author : Mahmoud Mowafey
+ *
+*/
 
 #include "External_EEPROM.h"
 
@@ -93,4 +99,17 @@ u8 * EEPROM_Read_Array(u16 address)
 	}while( ( arr[i-1] != '\0' ) && ( i != 19 ) );
 	arr[i] = '\0';
 	return arr;
+}
+
+
+
+
+
+u8 decimal_to_hex(u8 val)
+{
+	u8 msb, lsb, hex;
+	msb = val / 10;
+	lsb = val % 10;
+	hex = ((msb << 4) + lsb);
+	return hex;
 }
