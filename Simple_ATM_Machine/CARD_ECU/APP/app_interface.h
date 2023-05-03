@@ -47,6 +47,8 @@
 
 void APP_initialization( void );
 void APP_startProgram  ( void );
+void APP_programmerMode( void );
+void APP_userMode	   ( void );
 
 /*******************************************************************************************************************************************************************/
 

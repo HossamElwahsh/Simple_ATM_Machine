@@ -37,9 +37,9 @@
  * PORT_D: 3
  * */
 #define LCD_CTRL_PORT 0
-#define LCD_CTRL_PIN_RS     DIO_U8_PIN_1
-#define LCD_CTRL_PIN_RW     DIO_U8_PIN_2
-#define LCD_CTRL_PIN_EN     DIO_U8_PIN_3
+#define LCD_CTRL_PIN_RS     DIO_U8_PIN_0
+#define LCD_CTRL_PIN_RW     DIO_U8_PIN_1
+#define LCD_CTRL_PIN_EN     DIO_U8_PIN_2
 
 
 #define HIGHER_NIBBLE_SHIFT(cmd)    cmd

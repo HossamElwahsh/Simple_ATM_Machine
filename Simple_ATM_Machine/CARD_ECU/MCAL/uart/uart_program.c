@@ -248,45 +248,30 @@ u8 UART_receiveByte     ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByt
 /*******************************************************************************************************************************************************************/
 /*
  Name: UART_receiveByteBlock
- Input: u8 InterruptionMode and u8 Pointer to u8 ReturnedReceiveByte
+ Input: u8 Pointer to u8 ReturnedReceiveByte
  Output: u8 Error or No Error
- Description: Function to Receive Byte using both Polling and Interrupt Modes, without Timeout mechanism.
+ Description: Function to Receive Byte using Polling Mode, without Timeout mechanism.
 */
-u8 UART_receiveByteBlock( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte )
+u8 UART_receiveByteBlock( u8 *pu8_a_returnedReceiveByte )
 {
 	/* Define local variable to set the error state = OK */
 	u8 u8_l_errorState = STD_OK;
 
-	/* Check 1: InterruptionMode is in the valid range, and Pointer is not equal to NULL */
-	if ( ( u8_a_interruptionMode <= UART_U8_RXC_INT_MODE ) && ( pu8_a_returnedReceiveByte != NULL ) )
+	/* Check 1: Pointer is not equal to NULL */
+	if ( pu8_a_returnedReceiveByte != NULL ) 
 	{
-		/* Check 1.1: Required InterruptionMode */
-		switch ( u8_a_interruptionMode )
-		{
-			case UART_U8_POLLING_MODE:
-			
-				/* Step 1: Wait ( Poll ) until Byte is Received ( i.e. until Flag ( RXC ) = 1 ), taking into consideration TimeOutCounter */
-				while ( GET_BIT( UART_U8_UCSRA_REG, UART_U8_RXC_BIT ) == 0 );
-				/* Step 2: Clear the flag ( RXC ) by writing logical one, because this is Polling Mode. */
-				SET_BIT( UART_U8_UCSRA_REG, UART_U8_RXC_BIT );
+		/* Step 1: Wait ( Poll ) until Byte is Received ( i.e. until Flag ( RXC ) = 1 ), taking into consideration TimeOutCounter */
+		while ( GET_BIT( UART_U8_UCSRA_REG, UART_U8_RXC_BIT ) == 0 );
+		/* Step 2: Clear the flag ( RXC ) by writing logical one, because this is Polling Mode. */
+		SET_BIT( UART_U8_UCSRA_REG, UART_U8_RXC_BIT );
 
-				/* Step 3: Get the Received Byte from the UART register -> ( UDR register ). */
-				*pu8_a_returnedReceiveByte = UART_U8_UDR_REG;
-		
-			break;
-
-			case UART_U8_RXC_INT_MODE:
-
-				/* Get the Received Byte from the UART register -> ( UDR register ). */
-				*pu8_a_returnedReceiveByte = UART_U8_UDR_REG;
-
-			break;
-		}
+		/* Step 3: Get the Received Byte from the UART register -> ( UDR register ). */
+		*pu8_a_returnedReceiveByte = UART_U8_UDR_REG;
 	}
-	/* Check 2: InterruptionMode is not in the valid range, or Pointer is equal to NULL */
+	/* Check 2: Pointer is equal to NULL */
 	else
 	{
-		/* Update error state = NOK, wrong InterruptionMode or Pointer is NULL! */
+		/* Update error state = NOK, Pointer is NULL! */
 		u8_l_errorState = STD_NOK;
 	}
 
