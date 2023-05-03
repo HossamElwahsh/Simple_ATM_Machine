@@ -1,4 +1,9 @@
-
+/*
+ * External_EEPROM.c
+ * Created: 3/5/2023 3:40 AM
+ * Author : Mahmoud Mowafey
+ *
+*/
 
 
 #ifndef EXTERNAL_EEPROM_H_
@@ -13,6 +18,13 @@
 #define EEPROM_ERROR 0
 #define EEPROM_SUCCESS 1
 #define BYTE_ADDRESS   0x0001
+
+#ifdef EEPROM_24C256B
+
+#else
+
+#endif // DEBUG
+
 
 void EEPROM_Init(void);
 u8 EEPROM_Write_Byte(u16 u16addr,u8 u8data);
