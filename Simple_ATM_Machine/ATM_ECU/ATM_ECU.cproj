@@ -139,13 +139,13 @@
     <Compile Include="APP\app_program.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\btn\btn_config.h">
+    <Compile Include="HAL\mbtn\mbtn_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\btn\btn_interface.h">
+    <Compile Include="HAL\mbtn\mbtn_interface.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\btn\btn_program.c">
+    <Compile Include="HAL\mbtn\mbtn_program.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="HAL\buzzer\buzzer.c">
@@ -238,7 +238,7 @@
     <Folder Include="HAL\lcd" />
     <Folder Include="HAL\kpd" />
     <Folder Include="HAL\buzzer" />
-    <Folder Include="HAL\btn" />
+    <Folder Include="HAL\mbtn" />
     <Folder Include="MCAL" />
     <Folder Include="HAL" />
     <Folder Include="LIB" />

@@ -27,7 +27,7 @@
 #include "../HAL/lcd/lcd_interface.h"
 #include "../HAL/kpd/kpd_interface.h"
 #include "../HAL/buzzer/buzzer.h"
-#include "../HAL/btn/btn_interface.h"
+#include "../HAL/mbtn/mbtn_interface.h"
 
 /* APP Macros */
 #define APP_ACTION_SHOW_CURSOR LCD_changeCursor(1);
@@ -43,8 +43,6 @@
 #define APP_DELAY_WELCOME_MSG   1000
 #define APP_DELAY_ERROR_MSG     1000
 #define APP_DELAY_APPROVED_MSG  1000
-#define APP_DELAY_LONG_PRESS    2000
-#define APP_DELAY_BTN_POLL      50
 
 
 /* APP STATES */
@@ -69,13 +67,7 @@
 
 /* APP Button */
 #define APP_BTN_ENTER_ZERO 2        // PIN 2
-#define APP_BTN_ENTER_ZERO_ID 3     // Button 3
 #define APP_BTN_ENTER_ZERO_PORT 1   // PORT B
-
-/* APP Button States */
-#define APP_BTN_STATE_LONG_RELEASED 2
-#define APP_BTN_STATE_PRESSED  1
-#define APP_BTN_STATE_RELEASED 0
 
 /* APP Actions */
 

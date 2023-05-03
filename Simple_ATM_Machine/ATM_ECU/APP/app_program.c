@@ -53,7 +53,7 @@ void APP_initialization(void) {
 
     /** HAL Initialization */
     BUZZER_init();  // Init Buzzer
-    BTN_init(APP_BTN_ENTER_ZERO, APP_BTN_ENTER_ZERO_PORT);  // Init Btn (0/Enter)
+    MBTN_init(APP_BTN_ENTER_ZERO, APP_BTN_ENTER_ZERO_PORT);  // Init Btn (0/Enter)
     KPD_initKPD();  // Init Keypad
     LCD_init();     // Init LCD
     LCD_clear();    // Clear LCD's display
@@ -91,7 +91,6 @@ void APP_startProgram(void) {
             case APP_STATE_INSERT_PIN:
 
                 // todo get PAN
-                //str_g_currentPAN = "4728459258966333";
 
                 // todo 3 u8_l_trials only, if failed lock and sound Alarm
                 LCD_setCursor(LCD_LINE1, LCD_COL6); // first pin digit position
@@ -112,54 +111,28 @@ void APP_startProgram(void) {
                             LCD_sendChar(APP_PIN_CHAR);
                             currentPosition++;
                         }
-                        // Enter/Zero button poll
-                        u8 u8_l_btnState = APP_BTN_STATE_RELEASED;
-                        u16 u16_l_elapsedTime = 0;
-                        BTN_getBtnState(APP_BTN_ENTER_ZERO_ID, &u8_l_btnState);
-                        if(u8_l_btnState == APP_BTN_STATE_PRESSED)
+                        // Check Enter/Zero button short/long press
+                        u8 u8_l_btnState = MBTN_STATE_NOT_PRESSED;
+                        MBTN_getBtnState(APP_BTN_ENTER_ZERO, APP_BTN_ENTER_ZERO_PORT, &u8_l_btnState);
+                        if(u8_l_btnState == MBTN_STATE_RELEASED)
                         {
-                            while(u8_l_btnState != APP_BTN_STATE_RELEASED)
-                            {
-                                TIMER_delay_ms(APP_DELAY_BTN_POLL); // wait 50ms
-                                u16_l_elapsedTime += APP_DELAY_BTN_POLL;
-                                BTN_getBtnState(APP_BTN_ENTER_ZERO_ID, &u8_l_btnState);
-                                if(u8_l_btnState == APP_BTN_STATE_RELEASED && u16_l_elapsedTime < APP_DELAY_LONG_PRESS)
-                                {
-                                    // short press
-                                    u8_l_currentPin[currentPosition] = APP_ZERO_CHAR;
-                                    LCD_sendChar(APP_PIN_CHAR);
-                                    currentPosition++;
-                                    break;
-                                }
-                            }
+                            u8_l_currentPin[currentPosition] = APP_ZERO_CHAR;
+                            LCD_sendChar(APP_PIN_CHAR);
+                            currentPosition++;
                         }
                     }
                     APP_ACTION_HIDE_CURSOR
+
                     // wait for Enter Button Press (long press for 2 or more seconds)
-                    u8 u8_l_btnState = APP_BTN_STATE_RELEASED;
-//                    u16 u16_l_elapsedTime = 0;
-                    while(u8_l_btnState != APP_BTN_STATE_LONG_RELEASED)
+                    u8 u8_l_btnState = MBTN_STATE_NOT_PRESSED;
+
+                    // block until long press
+                    while(u8_l_btnState != MBTN_STATE_LONG_RELEASED)
                     {
-                        // Enter/Zero button poll
-                        BTN_getBtnState(APP_BTN_ENTER_ZERO_ID, &u8_l_btnState);
-                        if(u8_l_btnState == APP_BTN_STATE_PRESSED)
-                        {
-                            u16 u16_l_elapsedTime = 0;
-                            while(u8_l_btnState != APP_BTN_STATE_RELEASED)
-                            {
-                                TIMER_delay_ms(APP_DELAY_BTN_POLL); // wait 50ms
-                                u16_l_elapsedTime += APP_DELAY_BTN_POLL;
-                                BTN_getBtnState(APP_BTN_ENTER_ZERO_ID, &u8_l_btnState);
-//                                if(u8_l_btnState == APP_BTN_STATE_RELEASED && u16_l_elapsedTime > APP_DELAY_LONG_PRESS)
-                                if(u16_l_elapsedTime > APP_DELAY_LONG_PRESS) // break out after LONG_DELAY even if it still pressed
-                                {
-                                    // long press detected, continue flow -> verify PIN
-                                    u8_l_btnState = APP_BTN_STATE_LONG_RELEASED;
-                                    break; // break inner loop
-                                }
-                            }
-                        }
+                        // Wait until long press
+                        MBTN_getBtnState(APP_BTN_ENTER_ZERO, APP_BTN_ENTER_ZERO_PORT, &u8_l_btnState);
                     }
+
                     // long press was detected, resuming
 
                     // todo wait for long 0 press then SPI verify PIN
@@ -239,38 +212,22 @@ void APP_startProgram(void) {
                     }
 
                     /** Enter/Zero button poll */
-                    u8 u8_l_btnState = APP_BTN_STATE_RELEASED;
-                    u16 u16_l_elapsedTime = 0;
-                    BTN_getBtnState(APP_BTN_ENTER_ZERO_ID, &u8_l_btnState);
-                    if(u8_l_btnState == APP_BTN_STATE_PRESSED)
+                    u8 u8_l_btnState = MBTN_STATE_NOT_PRESSED;
+                    MBTN_getBtnState(APP_BTN_ENTER_ZERO,APP_BTN_ENTER_ZERO_PORT, &u8_l_btnState);
+                    if(u8_l_btnState == MBTN_STATE_RELEASED)
                     {
-                        while(u8_l_btnState != APP_BTN_STATE_RELEASED)
-                        {
-                            TIMER_delay_ms(APP_DELAY_BTN_POLL); // wait 50ms
-                            u16_l_elapsedTime += APP_DELAY_BTN_POLL;
-                            BTN_getBtnState(APP_BTN_ENTER_ZERO_ID, &u8_l_btnState);
-                            if(u8_l_btnState == APP_BTN_STATE_RELEASED && u16_l_elapsedTime < APP_DELAY_LONG_PRESS)
-                            {
-                                // short press
-                                LCD_sendChar(APP_ZERO_CHAR); // display pressed key digit on LCD
-                                str_l_transactionAmount[u8_l_currentPosition] = APP_ZERO_CHAR; // save digit value
+                        // short press
+                        LCD_sendChar(APP_ZERO_CHAR); // display pressed key digit on LCD
+                        str_l_transactionAmount[u8_l_currentPosition] = APP_ZERO_CHAR; // save digit value
 
-                                if (u8_l_currentPosition == 3) {
-                                    // skip decimal point placeholder on LCD
-                                    u8_l_currentPosition += 2;
-                                    LCD_setCursor(LCD_LINE1, LCD_COL9);
-                                } else u8_l_currentPosition++;
-                            }
-                            if(u16_l_elapsedTime > APP_DELAY_LONG_PRESS) // long press
-                            {
-                                // long press
-                                u8_l_btnState = APP_BTN_STATE_LONG_RELEASED;
-                                break; // break from state check loop
-                            }
-                        }
+                        if (u8_l_currentPosition == 3) {
+                            // skip decimal point placeholder on LCD
+                            u8_l_currentPosition += 2;
+                            LCD_setCursor(LCD_LINE1, LCD_COL9);
+                        } else u8_l_currentPosition++;
                     }
-                    // break out of amount entry if long press (ENTER) was pressed -> continue trx flow
-                    if(u8_l_btnState == APP_BTN_STATE_LONG_RELEASED) break;
+                        // break out of amount entry if long press (ENTER) was pressed -> continue trx flow
+                    else if(u8_l_btnState == MBTN_STATE_LONG_RELEASED) break;
 
                     /* End Enter/Zero button poll */
                     if(u8_l_currentPosition == 7) // repeat from start if reached end of number placeholders
@@ -281,7 +238,6 @@ void APP_startProgram(void) {
                 }
                 APP_ACTION_HIDE_CURSOR
                 KPD_disableKPD(); // Disable keypad
-                // todo disable 0 / enter button
 
                 LCD_setCursor(LCD_LINE0, LCD_COL1);
                 LCD_sendString((u8 *) "Please wait...");
