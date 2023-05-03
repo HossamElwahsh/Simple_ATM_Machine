@@ -340,13 +340,13 @@ void APP_startProgram(void) {
 }
 
 
-/**
- * @brief Used to switch between app states to initialize standard UI elements before main app flow (loop)
- *
- * @param [in]u8_a_state state to set (APP_STATE_RUNNING, APP_STATE_...)
- *
- * @return void
- */
+/*
+ @brief Used to switch between app states to initialize standard UI elements before main app flow (loop)
+
+ @param [in]u8_a_state state to set (APP_STATE_RUNNING, APP_STATE_...)
+
+ @return void
+*/
 void APP_switchState(u8 u8_a_state) {
     switch (u8_a_state) {
         case APP_STATE_LAUNCH:
@@ -388,7 +388,7 @@ void APP_switchState(u8 u8_a_state) {
     u8_g_appState = u8_a_state; // globally set new app state
 }
 
-// Ran when an INT0 interrupt is fired / Card inserted
+//Ran when an INT0 interrupt is fired / Card inserted
 void APP_trigger(void) {
     // receive SPI data
     if (u8_g_appState == APP_STATE_LAUNCH) APP_switchState(APP_STATE_INSERT_PIN);

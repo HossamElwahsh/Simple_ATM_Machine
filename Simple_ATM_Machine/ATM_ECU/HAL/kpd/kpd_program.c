@@ -59,8 +59,14 @@ void KPD_initKPD    ( void )
 */
 void KPD_enableKPD  ( void )
 {
-	/* Set the two Pins configured Output to Output, in order to enable or re-enable the KPD, therefore two Pins are Output, and the other three are Input */
-	//DIO_init( 2, PORT_C, DIO_OUT );
+	/* Set the two Pins configured Output to Output, in order to enable or re-enable the KPD, therefore three Pins are Output, and the other three are Input */
+	DIO_init( KPD_U8_OUTPUT_PIN1, KPD_U8_OUTPUT_PORT, DIO_OUT );
+	DIO_init( KPD_U8_OUTPUT_PIN2, KPD_U8_OUTPUT_PORT, DIO_OUT );
+	DIO_init( KPD_U8_OUTPUT_PIN3, KPD_U8_OUTPUT_PORT, DIO_OUT );
+	
+	DIO_write( KPD_U8_OUTPUT_PIN1, KPD_U8_OUTPUT_PORT, DIO_U8_PIN_HIGH );
+	DIO_write( KPD_U8_OUTPUT_PIN2, KPD_U8_OUTPUT_PORT, DIO_U8_PIN_HIGH );
+	DIO_write( KPD_U8_OUTPUT_PIN3, KPD_U8_OUTPUT_PORT, DIO_U8_PIN_HIGH );
 }
 
 /*******************************************************************************************************************************************************************/
@@ -72,8 +78,10 @@ void KPD_enableKPD  ( void )
 */
 void KPD_disableKPD ( void )
 {
-	/* Set the two Pins configured Output to Input, in order to disable the KPD, therefore all KPD pins are Input */
-	//DIO_init( 2, PORT_C, DIO_IN );
+	/* Set the three Pins configured Output to Input, in order to disable the KPD, therefore all KPD pins are Input */
+	DIO_init( KPD_U8_OUTPUT_PIN1, KPD_U8_OUTPUT_PORT, DIO_IN );
+	DIO_init( KPD_U8_OUTPUT_PIN2, KPD_U8_OUTPUT_PORT, DIO_IN );
+	DIO_init( KPD_U8_OUTPUT_PIN3, KPD_U8_OUTPUT_PORT, DIO_IN );
 }
 
 /*******************************************************************************************************************************************************************/
