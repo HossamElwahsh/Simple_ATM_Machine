@@ -18,8 +18,8 @@
  * This function initializes a push button connected to a specific pin in a specific port.
  * It configures the pin as input, enables the pull-up resistor, and initializes the timer.
  *
- * @param u8_a_pinNumber The number of the pin to which the button is connected.
- * @param en_a_portNumber The port to which the button is connected.
+ * @param [in]u8_a_pinNumber The number of the pin to which the button is connected.
+ * @param [in]en_a_portNumber The port to which the button is connected.
  *
  * @return Returns the state of the initialization operation. STD_OK if successful and STD_NOK if failed.
  */
@@ -37,9 +37,9 @@ u8 MBTN_init(u8 u8_a_pinNumber, EN_DIO_PORT_T en_a_portNumber) {
 /**
  * @brief This function gets the state of a mechanical button (pressed, not pressed, long press)
  *
- * @param u8_a_pinNumber The pin number of the button
- * @param en_a_portNumber The port number of the button
- * @param u8Ptr_a_returnedBtnState A pointer to the variable to store the button state (pressed, not pressed, long press)
+ * @param [in]u8_a_pinNumber The pin number of the button
+ * @param [in]en_a_portNumber The port number of the button
+ * @param [out]u8Ptr_a_returnedBtnState A pointer to the variable to store the button state (pressed, not pressed, long press)
  *
  * @return Returns the status of the function (STD_OK, STD_NOK)
  */
