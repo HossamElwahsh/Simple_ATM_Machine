@@ -7,10 +7,13 @@
 
 #include "External_EEPROM.h"
 
+
 void EEPROM_Init(void)
 {
 	TWI_Init(); // just initialize the TWI module inside the MC
 }
+
+#ifdef EEPROM_24C16B
 
 u8 EEPROM_Write_Byte(u16 u16addr, u8 u8data)
 {
@@ -71,6 +74,66 @@ u8 EEPROM_Read_Byte(u16 u16addr, u8 *u8data)
 	TWI_Stop();
 	return EEPROM_SUCCESS;
 }
+
+
+#else
+
+EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
+{
+	TWI_start();
+	if (TWI_getStatus() != TW_START)
+	{
+		return EEPROM_ERROR;
+	}
+	//Send the Device Address and R/W=0 bit
+	TWI_write((u8)((MANDATORY_SEQUENCE_256) | ((u16_l_byteAddress & PAGE_MASK_256) >> NEDDED_SHIFT_TIMES_256)));
+	if (TWI_getStatus() != TW_MT_SLA_W_ACK)
+	{
+		return EEPROM_ERROR;
+	}
+	//Send the first word ( 7-MSBs)
+	TWI_write((u8)(u16_l_byteAddress >> SHIFT_THE_FIRST_BYTE));
+	if (TWI_getStatus() != TW_MT_DATA_ACK)
+	{
+		return EEPROM_ERROR;
+	}
+	//Send the first word ( 8-LSBs)
+	TWI_write((u8)(u16_l_byteAddress));
+	if (TWI_getStatus() != TW_MT_DATA_ACK)
+	{
+		return EEPROM_ERROR;
+	}
+	//write byte to eeprom
+	TWI_write(u8_l_byteData);
+	if (TWI_getStatus() != TW_MT_DATA_ACK)
+	{
+		return EEPROM_ERROR;
+	}
+	//send a repeated start
+	TWI_start();
+	if (TWI_getStatus() != TW_REP_START)
+	{
+		return EEPROM_ERROR;
+	}
+	//Send the Device Address and R/W=0 bit
+	TWI_write((u8)((MANDATORY_SEQUENCE_256) | ((u16_l_byteAddress & PAGE_MASK_256) >> NEDDED_SHIFT_TIMES_256) | 1));
+	if (TWI_getStatus() != TW_MT_SLA_W_ACK)
+	{
+		return EEPROM_ERROR;
+	}
+	//Read the data from the eeprom	with NACK
+	*u8_l_byteData = TWI_readWithNAck();
+	if (TWI_getStatus() != TW_MR_DATA_NACK)
+	{
+		return EEPROM_ERROR;
+	}
+
+	TWI_stop();
+	return EEPROM_SUCCESS;
+}
+
+#endif
+
 u8 EEPROM_Write_Array(u16 u16addr, u8 *pstr)
 {
 	u8 i=0,x=0;
