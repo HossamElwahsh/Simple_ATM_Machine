@@ -19,19 +19,30 @@ typedef enum {
 	EEPROM_ERROR,
 	EEPROM_SUCCESS
 }EN_eepromError_t;
-#define BYTE_ADDRESS   0x0001
 
-#ifdef EEPROM_24C256B
 
+#define EEPROM_24C256B
+
+#ifdef EEPROM_24C16B
+	#define BYTE_ADDRESS			0x0045
+	#define MANDATORY_SEQUENCE	     0xA0
+	#define	PAGE_MASK			     0x0700
+	#define NEDDED_SHIFT_TIMES	     7
+	u8 EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData);
+	u8 EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData);
 #else
+	#define BYTE_ADDRESS			 0x011
+	#define MANDATORY_SEQUENCE_256   0xA0   // 10100 
+	#define	PAGE_MASK_256			 0x0600
+	#define NEDDED_SHIFT_TIMES_256	 7	
+	#define SHIFT_THE_FIRST_BYTE	 8	
+	u8 EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData);
+	u8 EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData);
+#endif 
 
-#endif // DEBUG
+void EEPROM_init(void);
+u8 EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData);
+u8 EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData);
 
-
-void EEPROM_Init(void);
-u8 EEPROM_Write_Byte(u16 u16addr,u8 u8data);
-u8 EEPROM_Read_Byte(u16 u16addr,u8 *u8data);
-u8 * EEPROM_Read_Array(u16 address);
-u8 EEPROM_Write_Array(u16 u16addr, u8 *pstr);
  
 #endif /* EXTERNAL_EEPROM_H_ */
