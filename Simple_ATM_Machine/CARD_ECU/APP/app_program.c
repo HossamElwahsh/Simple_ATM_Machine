@@ -28,16 +28,13 @@ void APP_initialization( void )
     TIMER_timer0NormalModeInit(DISABLED);
 
 
-    u8 count;
-    char buffer[5];
+    u8 count = SPI_U8_DUMMY_VAL;
 
     SPI_init();
 
-
     while(1)
     {
-        u8 data;
-        count = SPI_receive(&data);
+        count = SPI_transceiver(count);
     }
 }
 
