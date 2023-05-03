@@ -4,13 +4,15 @@
 #ifndef EXTERNAL_EEPROM_H_
 #define EXTERNAL_EEPROM_H_
 
-#define EEPROM_ERROR 0
-#define EEPROM_SUCCESS 1
 
 #include "../../MCAL/twi/twi.h"
 #include "../../MCAL/timer/timer_interface.h"
 #include "../../LIB/bit_math.h"
 #include "../../LIB/std.h"
+
+#define EEPROM_ERROR 0
+#define EEPROM_SUCCESS 1
+#define BYTE_ADDRESS   0x0001
 
 void EEPROM_Init(void);
 u8 EEPROM_Write_Byte(u16 u16addr,u8 u8data);
