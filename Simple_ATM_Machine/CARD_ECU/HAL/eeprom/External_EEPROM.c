@@ -11,38 +11,6 @@ void EEPROM_init(void)
 	TWI_init(); // just initialize the TWI module inside the MC
 }
 
-
-EN_eepromError_t EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr)
-{
-	u8 i = 0, x = 0;
-	u16 j = u16_l_byteAddress;
-	while (pstr[i] != '\0')
-	{
-		x = EEPROM_writeByte(j++, pstr[i++]);
-		TIMER_delay_ms(10);
-		if (0 == x)
-			return EEPROM_ERROR;
-	}
-	EEPROM_writeByte(j, '\0');
-	TIMER_delay_ms(10);
-	return EEPROM_SUCCESS;
-}
-
-u8* EEPROM_readArray(u16 u16_l_byteAddress)
-{
-	u8 i = 0;
-	static u8 arr[20];
-	do {
-		EEPROM_readByte(u16_l_byteAddress, &arr[i]);
-		TIMER_delay_ms(10);
-		u16_l_byteAddress++;
-		i++;
-	} while ((arr[i - 1] != '\0') && (i != 19));
-	arr[i] = '\0';
-	return arr;
-}
-
-
 #ifdef EEPROM_24C16B
 
 EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
@@ -115,6 +83,8 @@ EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 	return EEPROM_SUCCESS;
 }
 
+
+
 #else
 
 EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
@@ -125,19 +95,19 @@ EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
 		return EEPROM_ERROR;
 	}
 	//Send the Device Address and R/W=0 bit
-	TWI_write((u8)((MANDATORY_SEQUENCE_256) | ((u16_l_byteAddress & PAGE_MASK_256) >> NEDDED_SHIFT_TIMES_256)));
+	TWI_write((u8)(MANDATORY_SEQUENCE));
 	if (TWI_getStatus() != TW_MT_SLA_W_ACK)
 	{
 		return EEPROM_ERROR;
 	}
-	//Send the first word ( 7-MSBs)
+	//Send the first word ( 7-MSBs) 0x0311 
 	TWI_write((u8)(u16_l_byteAddress >> SHIFT_THE_FIRST_BYTE));
 	if (TWI_getStatus() != TW_MT_DATA_ACK)
 	{
 		return EEPROM_ERROR;
 	}
-	//Send the first word ( 8-LSBs)
-	TWI_write((u8)(u16_l_byteAddress));
+	//Send the Second word ( 8-LSBs)
+	TWI_write((u8)((u16_l_byteAddress)&PAGE_MASK_256));
 	if (TWI_getStatus() != TW_MT_DATA_ACK)
 	{
 		return EEPROM_ERROR;
@@ -160,25 +130,19 @@ EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 		return EEPROM_ERROR;
 	}
 	//Send the Device Address and R/W=0 bit
-	TWI_write((u8)((MANDATORY_SEQUENCE_256) | ((u16_l_byteAddress & PAGE_MASK_256) >> NEDDED_SHIFT_TIMES_256)));
+	TWI_write((u8)((MANDATORY_SEQUENCE)));
 	if (TWI_getStatus() != TW_MT_SLA_W_ACK)
 	{
 		return EEPROM_ERROR;
 	}
-	//Send the first word ( 7-MSBs)
+	//Send the first word ( 7-MSBs)--->0x0311
 	TWI_write((u8)(u16_l_byteAddress >> SHIFT_THE_FIRST_BYTE));
 	if (TWI_getStatus() != TW_MT_DATA_ACK)
 	{
 		return EEPROM_ERROR;
 	}
-	//Send the first word ( 8-LSBs)
-	TWI_write((u8)(u16_l_byteAddress));
-	if (TWI_getStatus() != TW_MT_DATA_ACK)
-	{
-		return EEPROM_ERROR;
-	}
-	//write byte to eeprom
-	TWI_write(u8_l_byteData);
+	//Send the Second word ( 8-LSBs)
+	TWI_write((u8)((u16_l_byteAddress)&PAGE_MASK_256));
 	if (TWI_getStatus() != TW_MT_DATA_ACK)
 	{
 		return EEPROM_ERROR;
@@ -189,19 +153,19 @@ EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 	{
 		return EEPROM_ERROR;
 	}
-	//Send the Device Address and R/W=0 bit
-	TWI_write((u8)((MANDATORY_SEQUENCE_256) | ((u16_l_byteAddress & PAGE_MASK_256) >> NEDDED_SHIFT_TIMES_256) | 1));
-	if (TWI_getStatus() != TW_MT_SLA_W_ACK)
+	//Send the Device Address and R/W=1 bit
+	TWI_write((u8)(0xA1));
+	if (TWI_getStatus() != TW_MT_SLA_R_ACK)
 	{
 		return EEPROM_ERROR;
 	}
 	//Read the data from the eeprom	with NACK
 	*u8_l_byteData = TWI_readWithNAck();
+
 	if (TWI_getStatus() != TW_MR_DATA_NACK)
 	{
 		return EEPROM_ERROR;
 	}
-
 	TWI_stop();
 	return EEPROM_SUCCESS;
 }
@@ -209,6 +173,35 @@ EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 
 #endif
 
+EN_eepromError_t EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr)
+{
+	u8 i = 0, x = 0;
+	u16 j = u16_l_byteAddress;
+	while (pstr[i] != '\0')
+	{
+		x = EEPROM_writeByte(j++, pstr[i++]);
+		TIMER_delay_ms(10);
+		if (0 == x)
+			return EEPROM_ERROR;
+	}
+	EEPROM_writeByte(j, '\0');
+	TIMER_delay_ms(10);
+	return EEPROM_SUCCESS;
+}
+
+u8* EEPROM_readArray(u16 u16_l_byteAddress)
+{
+	u8 i = 0;
+	static u8 arr[20];
+	do {
+		EEPROM_readByte(u16_l_byteAddress, &arr[i]);
+		TIMER_delay_ms(10);
+		u16_l_byteAddress++;
+		i++;
+	} while ((arr[i - 1] != '\0') && (i != 19));
+	arr[i] = '\0';
+	return arr;
+}
 
 u8 decimal_to_hex(u8 val)
 {
@@ -218,3 +211,4 @@ u8 decimal_to_hex(u8 val)
 	hex = ((msb << 4) + lsb);
 	return hex;
 }
+
