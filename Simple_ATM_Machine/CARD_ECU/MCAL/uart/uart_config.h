@@ -104,7 +104,7 @@
 /* Options: UART_U8_TX_DISABLED
  *          UART_U8_TX_ENABLED
  */
-#define UART_U8_TX_ENABLE   		          UART_U8_TX_DISABLED
+#define UART_U8_TX_ENABLE   		          UART_U8_TX_ENABLED
 
 /* UART RX Complete Interrupt Enable */
 /* Options: UART_U8_RX_INT_DISABLED
@@ -144,7 +144,7 @@
  *          UART_U8_8_BITS_DATA
  *          UART_U8_9_BITS_DATA
  */
-#define UART_U8_DATA_BITS_SELECT		      UART_U8_5_BITS_DATA
+#define UART_U8_DATA_BITS_SELECT		      UART_U8_8_BITS_DATA
 
 /* UART Baud Rate Select */
 /* Options: UART_U8_BAUD_RATE_2400
@@ -156,7 +156,7 @@
  *          UART_U8_BAUD_RATE_38400
  *          UART_U8_BAUD_RATE_57600
  */
-#define UART_U8_BAUD_RATE_SELECT              UART_U8_BAUD_RATE_2400
+#define UART_U8_BAUD_RATE_SELECT              UART_U8_BAUD_RATE_9600
 
 /* TimeOutCounter Max Value */
 #define UART_U16_TIME_OUT_MAX_VALUE		      50000
