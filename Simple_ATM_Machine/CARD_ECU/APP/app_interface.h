@@ -20,13 +20,13 @@
 
 /* MCAL */
 #include "../MCAL/dio/dio_interface.h"
-//#include "../MCAL/timer/timer_interface.h"
-//#include "../MCAL/twi/twi.h"
-//#include "../MCAL/spi/spi_interface.h"
+#include "../MCAL/timer/timer_interface.h"
+#include "../MCAL/twi/twi.h"
+#include "../MCAL/spi/spi_interface.h"
 #include "../MCAL/uart/uart_interface.h"
 
 /* HAL */
-//#include "../HAL/eeprom/External_EEPROM.h"
+#include "../HAL/eeprom/External_EEPROM.h"
 #include "../HAL/lcd/lcd_interface.h"
 
 /*******************************************************************************************************************************************************************/
@@ -47,6 +47,7 @@
 
 void APP_initialization( void );
 void APP_startProgram  ( void );
+
 void APP_programmerMode( void );
 void APP_userMode	   ( void );
 

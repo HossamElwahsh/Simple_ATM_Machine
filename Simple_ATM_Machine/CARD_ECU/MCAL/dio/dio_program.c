@@ -143,7 +143,6 @@ EN_DIO_ERROR_T DIO_write(u8 u8_a_pinNumber, EN_DIO_PORT_T en_a_portNumber, u8 u8
                 // error handling
                 return DIO_ERROR;
             }
-
             break;
         case PORT_B:
             if (u8_a_value == DIO_U8_PIN_HIGH || u8_a_value == DIO_U8_PIN_LOW) {

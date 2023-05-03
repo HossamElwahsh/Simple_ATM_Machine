@@ -30,15 +30,15 @@ void APP_initialization( void )
 	LCD_init();     // Init LCD
 	LCD_clear();    // Clear LCD's display
 
-
-    u8 count = SPI_U8_DUMMY_VAL;
-
-    SPI_init();
-
-    while(1)
-    {
-        count = SPI_transceiver(count);
-    }
+	EEPROM_init();
+    //u8 count = SPI_U8_DUMMY_VAL;
+	//
+    //SPI_init();
+	//
+    //while(1)
+    //{
+    //    count = SPI_transceiver(count);
+    //}
 }
 
 /*******************************************************************************************************************************************************************/
@@ -115,39 +115,87 @@ void APP_startProgram  ( void )
 */
 void APP_programmerMode( void )
 {
-	u8 u8_l_equalPINsFlag = APP_U8_FLAG_DOWN;
+	u8 u8_l_validPANFlag  = APP_U8_FLAG_DOWN;
+	u8 u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 	u8 u8_l_charFlag =  APP_U8_FLAG_DOWN;
-	
-	u8 u8_l_recData = 0;
-	u8 u8_l_cardPAN[20] = { 0 };
-	u8 u8_l_newPIN[10] = { '\0' };
-	u8 u8_l_confirmedPIN[10] = { '\0' };
-	u8 u8_l_index = 0;
 		
-	/* Step 1: Display "Please Enter Card PAN" on terminal */
-	UART_transmitString( ( u8 * ) "Please Enter Card PAN: " );
+	u8 u8_l_cardPAN[25] = { 0 };
+	u8 u8_l_newPIN1[10] = { 0 };
+	u8 u8_l_newPIN2[10] = { 0 };
 	
-	/* Step 2: Receive PAN value */
-	while ( ( u8_l_recData != UART_U8_ENTER_CHAR ) && ( u8_l_index < 19 ) )
+	u8 u8_l_recData = 0;	
+	u8 u8_l_index = 0;
+	
+	/* Loop: Until user enters a valid PAN */
+	while ( u8_l_validPANFlag == APP_U8_FLAG_DOWN )
 	{
-		UART_receiveByteBlock( &u8_l_recData );
-		u8_l_cardPAN[u8_l_index] = u8_l_recData;
-		u8_l_index++;
+		memset( u8_l_cardPAN, '\0', 25 );
+		
+		/* Update Flags */
+		u8_l_charFlag = APP_U8_FLAG_DOWN;
+		u8_l_validPANFlag = APP_U8_FLAG_UP;
+		
+		/* Step 1: Display "Please Enter Card PAN" on terminal */
+		UART_transmitString( ( u8 * ) "Please Enter Card PAN: " );
+		
+		u8_l_recData = 0;
+		u8_l_index = 0;
+		
+		/* Step 2: Receive PAN value */
+		while ( u8_l_recData != UART_U8_ENTER_CHAR )
+		{
+			UART_receiveByteBlock( &u8_l_recData );
+			u8_l_cardPAN[u8_l_index] = u8_l_recData;
+			u8_l_index++;
+		}
+		
+		u8_l_cardPAN[u8_l_index - 1] = '\0';
+		
+		u8_l_index = 0;
+		
+		/* Loop: Until the end of PAN */
+		while ( u8_l_cardPAN[u8_l_index] != '\0' )
+		{
+			if ( u8_l_cardPAN[u8_l_index] < 48 || u8_l_cardPAN[u8_l_index] > 57 )
+			{
+				u8_l_charFlag = APP_U8_FLAG_UP;
+				break;
+			}
+			u8_l_index++;
+		}
+				
+		/* Check 1: PAN is a non numeric */
+		if ( u8_l_charFlag == APP_U8_FLAG_UP )
+		{
+			/* Display "Wrong PAN" on terminal */
+			UART_transmitString( ( u8 * ) ">> Wrong PAN [Non Numeric]\n\r" );
+			u8_l_validPANFlag = APP_U8_FLAG_DOWN;
+			continue;
+		}
+				
+		/* Check 2: PAN is not in the valid range */
+		if ( u8_l_index < 16 || u8_l_index > 19 )
+		{
+			/* Display "Wrong PAN" on terminal */
+			UART_transmitString( ( u8 * ) ">> Wrong PAN [Not in valid range]\n\r" );
+			u8_l_validPANFlag = APP_U8_FLAG_DOWN;
+			continue;
+		}
 	}
 	
-	u8_l_cardPAN[u8_l_index] = '\0';
-	
-	UART_transmitString( ( u8 * ) "\r" );
-	
-	/* Loop: Until user enters two identical numeric PINs, and don't exceed 4 digits */
-	while ( u8_l_equalPINsFlag == APP_U8_FLAG_DOWN )
-	{
-		memset( u8_l_newPIN, '\0', 10 );
-		memset( u8_l_confirmedPIN, '\0', 10 );
+	EEPROM_writeArray( 0x6D16, u8_l_cardPAN );
 		
-		/* Update Flag */
-		u8_l_charFlag == APP_U8_FLAG_DOWN;
-		u8_l_equalPINsFlag = APP_U8_FLAG_UP;
+	UART_transmitString( ( u8 * ) "\r          <<<<<<<<<<<>>>>>>>>>>          \r\r" );
+	
+	/* Loop: Until user enters valid PINs */
+	while ( u8_l_validPINsFlag == APP_U8_FLAG_DOWN )
+	{
+		memset( u8_l_newPIN1, '\0', 10 );
+		memset( u8_l_newPIN2, '\0', 10 );
+		
+		/* Update Flags */
+		u8_l_charFlag = APP_U8_FLAG_DOWN;
+		u8_l_validPINsFlag = APP_U8_FLAG_UP;
 		
 		/* Step 3: Display "Please Enter New PIN" on terminal */
 		UART_transmitString( ( u8 * ) "Please Enter New PIN: " );
@@ -159,11 +207,11 @@ void APP_programmerMode( void )
 		while ( u8_l_recData != UART_U8_ENTER_CHAR )
 		{
 			UART_receiveByteBlock( &u8_l_recData );
-			u8_l_newPIN[u8_l_index] = u8_l_recData;
+			u8_l_newPIN1[u8_l_index] = u8_l_recData;
 			u8_l_index++;
 		}
 		
-		u8_l_newPIN[u8_l_index - 1] = '\0';
+		u8_l_newPIN1[u8_l_index - 1] = '\0';
 		
 		/* Step 5: Display "Please Confirm New PIN" on terminal */
 		UART_transmitString( ( u8 * ) "Please Confirm New PIN: " );
@@ -175,34 +223,31 @@ void APP_programmerMode( void )
 		while ( u8_l_recData != UART_U8_ENTER_CHAR )
 		{
 			UART_receiveByteBlock( &u8_l_recData );
-			u8_l_confirmedPIN[u8_l_index] = u8_l_recData;
+			u8_l_newPIN2[u8_l_index] = u8_l_recData;
 			u8_l_index++;
 		}
 		
-		u8_l_confirmedPIN[u8_l_index - 1] = '\0';
-		
-		UART_transmitString( ( u8 * ) "\n\r" );
+		u8_l_newPIN2[u8_l_index - 1] = '\0';
 			
 		/* Check 1: Two PINs are not identical */
-		if ( strcmp( u8_l_newPIN, u8_l_confirmedPIN ) )
+		if ( strcmp( u8_l_newPIN1, u8_l_newPIN2 ) )
 		{
 			/* Display "Wrong PIN" on terminal */
-			UART_transmitString( ( u8 * ) "Wrong PIN [Non Identical]\n\r" );
-			u8_l_equalPINsFlag = APP_U8_FLAG_DOWN;
+			UART_transmitString( ( u8 * ) ">> Wrong PIN [Non Identical]\n\r\r" );
+			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
 			
 		u8_l_index = 0;
 			
 		/* Loop: Until the end of PIN */
-		while ( u8_l_newPIN[u8_l_index] != '\0' )
+		while ( u8_l_newPIN1[u8_l_index] != '\0' )
 		{
-			if ( u8_l_newPIN[u8_l_index] < 48 || u8_l_newPIN[u8_l_index] > 57 )
+			if ( u8_l_newPIN1[u8_l_index] < 48 || u8_l_newPIN1[u8_l_index] > 57 )
 			{
 				u8_l_charFlag = APP_U8_FLAG_UP;
 				break;
-			}
-			
+			}			
 			u8_l_index++;
 		}
 			
@@ -210,8 +255,8 @@ void APP_programmerMode( void )
 		if ( u8_l_charFlag == APP_U8_FLAG_UP )
 		{
 			/* Display "Wrong PIN" on terminal */
-			UART_transmitString( ( u8 * ) "Wrong PIN [Non Numeric]\n\r" );
-			u8_l_equalPINsFlag = APP_U8_FLAG_DOWN;
+			UART_transmitString( ( u8 * ) ">> Wrong PIN [Non Numeric]\n\r\r" );
+			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
 			
@@ -219,8 +264,8 @@ void APP_programmerMode( void )
 		if ( u8_l_index < 4 || u8_l_index > 4 )
 		{
 			/* Display "Wrong PIN" on terminal */
-			UART_transmitString( ( u8 * ) "Wrong PIN [Not 4 Digits]\n\r" );
-			u8_l_equalPINsFlag = APP_U8_FLAG_DOWN;
+			UART_transmitString( ( u8 * ) ">> Wrong PIN [Not 4 Digits]\n\r\r" );
+			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
 	}
