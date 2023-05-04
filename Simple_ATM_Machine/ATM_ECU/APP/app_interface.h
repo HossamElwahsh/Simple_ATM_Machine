@@ -58,6 +58,7 @@
 #define APP_CMD_REQ_PAN                 0xC3
 
 /* APP COMM RESPONSES */
+#define APP_RESP_PIN_REC_READY      0xC2
 #define APP_RESP_PIN0 0xA0      // Slave requesting PIN digit with index 0
 #define APP_RESP_PIN1 0xA1      // Slave requesting PIN digit with index 1
 #define APP_RESP_PIN2 0xA2      // Slave requesting PIN digit with index 2
