@@ -41,7 +41,14 @@ f32 f32_g_maxAllowedDailyLimit = 5000.0f; // Maximum allowed daily transaction l
 u8 u8_g_appState = APP_STATE_LAUNCH; // Current App State
 u8 str_g_currentPAN[20] = "4946084897338284";
 
-
+/**
+ * @brief Initializes the application by initializing the MCAL and HAL components.
+ *
+ * @details This function initializes the external interrupt, SPI, timer0, buzzer, button, keypad, and LCD.
+ * It also clears the LCD's display and switches to the entry point state.
+ *
+ * @return void
+ */
 void APP_initialization(void) {
 
     /** MCAL Initialization */
@@ -62,7 +69,14 @@ void APP_initialization(void) {
     APP_switchState(u8_g_appState); // switch to entry point state
 }
 
-
+/**
+ * @brief Start the application program flow for ATM
+ *
+ * This function starts the application program and enters an infinite loop that continuously polls
+ * the application state and executes the corresponding actions according to the current state.
+ *
+ * @return void
+ */
 void APP_startProgram(void) {
     while (1) {
         switch (u8_g_appState) {
@@ -73,7 +87,7 @@ void APP_startProgram(void) {
                 LCD_sendString((u8 *) "Sending: ");
 
                 // ss enable
-                DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
+//                DIO_write(SPI_SS, SPI_PORT, DIO_U8_PIN_LOW);
                 u8 count = 0;
                 char buffer[5];
                 while (1) {
@@ -82,9 +96,23 @@ void APP_startProgram(void) {
                     LCD_setCursor(LCD_LINE1, LCD_COL10);
                     LCD_sendString((u8 *) buffer);
                     count++;
-                    TIMER_delay_ms(1000);
-                    if (count == 250) count = 0;
+                    TIMER_delay_ms(100);
+                    if (count == 8) {
+                        count = 0;
+                        SPI_stop();
+                    }
                 }
+
+                /* Receiver test slave code */
+                /*u8 count = SPI_U8_DUMMY_VAL;
+
+                SPI_init();
+
+                while(1)
+                {
+                    count = SPI_transceiver(count);
+                }*/
+
                 break;
             case APP_STATE_LAUNCH:
                 // ignored
@@ -344,7 +372,7 @@ void APP_startProgram(void) {
 /**
  * @brief Used to switch between app states to initialize standard UI elements before main app flow (loop)
  *
- * @param [in]u8_a_state state to set (APP_STATE_RUNNING, APP_STATE_...)
+ * @param [in]u8_a_state state to set (APP_STATE_LAUNCH, APP_STATE_...)
  *
  * @return void
  */
@@ -389,7 +417,9 @@ void APP_switchState(u8 u8_a_state) {
     u8_g_appState = u8_a_state; // globally set new app state
 }
 
-// Ran when an INT0 interrupt is fired / Card inserted
+/**
+ * Ran when an INT0 interrupt is fired / Card inserted, switches app state to INSERT_PIN
+ */
 void APP_trigger(void) {
     // receive SPI data
     if (u8_g_appState == APP_STATE_LAUNCH) APP_switchState(APP_STATE_INSERT_PIN);
