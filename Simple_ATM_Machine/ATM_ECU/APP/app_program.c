@@ -171,11 +171,22 @@ void APP_startProgram(void) {
                     LCD_sendString((u8 *) "Please wait\nVerifying");
                     // todo updated verifying dots every couple of commands to not block user out without feedback
                     // to bypass verification enable this break
-//                    break;
+                    // break;
 
-                    u8 u8_l_response = 0;
+                    // PIN ready ACK from slave
+                    u8 u8_l_response;
+                    while(1)
+                    {
+                        u8_l_response = SPI_transceiver(APP_CMD_PIN_READY);
+                        if(u8_l_response == APP_RESP_PIN_REC_READY) break;
+                    }
+
+                    u8_l_response = 0;
                     u8 u8_l_cursor = LCD_COL9;
                     while (u8_l_response != APP_RESP_PIN_OK && u8_l_response != APP_RESP_PIN_WRONG) {
+
+                        // progress bar UI
+                        //region Progress bar UI
                         LCD_setCursor(LCD_LINE1, u8_l_cursor);
                         LCD_sendChar('.');
                         if(u8_l_cursor == LCD_COL15) {
@@ -184,6 +195,8 @@ void APP_startProgram(void) {
                             LCD_sendString((u8 *)"        ");
                         }
                         u8_l_cursor++;
+                        //endregion
+
                         u8_l_response = SPI_transceiver(APP_CMD_WAIT_FOR_SLAVE_REQ);
                         switch (u8_l_response) {
                             case APP_RESP_PIN0:
