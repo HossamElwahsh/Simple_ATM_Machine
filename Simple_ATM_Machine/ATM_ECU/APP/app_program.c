@@ -167,6 +167,7 @@ void APP_startProgram(void) {
                     // todo wait for long 0 press then SPI verify PIN
                     // verify PIN
                     LCD_clear();
+                    
                     LCD_setCursor(LCD_LINE0, LCD_COL2);
                     LCD_sendString((u8 *) "Please wait\nVerifying");
                     // todo updated verifying dots every couple of commands to not block user out without feedback

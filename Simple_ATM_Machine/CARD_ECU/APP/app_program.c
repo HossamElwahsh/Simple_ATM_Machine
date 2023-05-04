@@ -26,7 +26,7 @@ static u8 u8_gs_newPIN1[10] = { 0 };
 void APP_initialization   ( void )
 {
 	/* MCAL Initialization */
-	DIO_init( DIO_U8_PIN_0, PORT_B, DIO_IN );
+	DIO_init( DIO_U8_PIN_0, PORT_B, DIO_OUT );
 	
 	TIMER_timer0NormalModeInit(DISABLED);
 	
@@ -392,20 +392,34 @@ void APP_programmerMode   ( void )
 */
 void APP_userMode	      ( void )
 {
+	//APP_receiveATMData( APP_EN_PAN );
+	
+	APP_receiveATMData( APP_EN_PIN );
+}
+
+/*******************************************************************************************************************************************************************/
+/*
+ Name: APP_receiveATMData
+ Input: void
+ Output: void
+ Description: Function to implement User Mode flow.
+*/
+void APP_receiveATMData   ( EN_cardData_t en_a_cardData )
+{
 	u8 u8_l_dummyData = 0;
 	u8 u8_l_recPIN[5] = { 0 };
-	
+		
 	/* Step 1: Send a notification to ATM ECU to receive data (falling edge) */
 	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_HIGH);
 	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_LOW );
-	
+		
 	/* Step 2: Receive response "PIN_READY" from ATM ECU */
 	/* Loop: Until response is received using SPI */
 	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_PIN_READY );
-	
+		
 	/* Step 3: Send response "PIN_READY" to ATM ECU */
 	SPI_transceiver( APP_CMD_RECV_READY );
-	
+		
 	/* Step 4: Receive PIN from ATM ECU */
 	/* Loop: Until PIN is received using SPI */
 	for ( u8 u8_l_index = 0; u8_l_index < 4; u8_l_index++ )
@@ -415,9 +429,9 @@ void APP_userMode	      ( void )
 		/* Step 6: Receive response PIN value byte by byte from ATM ECU */
 		u8_l_recPIN[u8_l_index] = SPI_transceiver( u8_l_dummyData );
 	}
-	
+		
 	u8_l_recPIN[4] = '\0';
-	
+		
 	/* Step 7: Compare PIN from Card ECU with the PIN received from ATM ECU */
 	/* Check 1: PINs are Identical */
 	if ( !( strcmp( u8_gs_newPIN1, u8_l_recPIN ) ) )
@@ -430,7 +444,7 @@ void APP_userMode	      ( void )
 	{
 		/* Step 8B: Send response "PIN_WRONG" to ATM ECU */
 		SPI_transceiver( APP_CMD_PIN_WRONG );
-	}	
+	}
 }
 
 /*******************************************************************************************************************************************************************/

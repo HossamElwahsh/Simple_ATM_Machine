@@ -53,6 +53,12 @@
 #define APP_CMD_PIN_WRONG		0xF0
 #define APP_CMD_PIN_OK			0xF1
 
+/* APP Typedefs */
+typedef enum EN_cardData_t
+{
+	APP_EN_PAN, APP_EN_PIN
+}EN_cardData_t;
+
 /*******************************************************************************************************************************************************************/
 /* APP Functions' Prototypes */
 
@@ -64,6 +70,8 @@ void APP_checkUserInput	  ( void );
 
 void APP_programmerMode   ( void );
 void APP_userMode	      ( void );
+
+void APP_receiveATMData   ( EN_cardData_t en_a_cardData );
 
 /*******************************************************************************************************************************************************************/
 
