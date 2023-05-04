@@ -41,7 +41,14 @@ f32 f32_g_maxAllowedDailyLimit = 5000.0f; // Maximum allowed daily transaction l
 u8 u8_g_appState = APP_STATE_LAUNCH; // Current App State
 u8 str_g_currentPAN[20] = "4946084897338284";
 
-
+/**
+ * @brief Initializes the application by initializing the MCAL and HAL components.
+ *
+ * @details This function initializes the external interrupt, SPI, timer0, buzzer, button, keypad, and LCD.
+ * It also clears the LCD's display and switches to the entry point state.
+ *
+ * @return void
+ */
 void APP_initialization(void) {
 
     /** MCAL Initialization */
@@ -62,7 +69,14 @@ void APP_initialization(void) {
     APP_switchState(u8_g_appState); // switch to entry point state
 }
 
-
+/**
+ * @brief Start the application program flow for ATM
+ *
+ * This function starts the application program and enters an infinite loop that continuously polls
+ * the application state and executes the corresponding actions according to the current state.
+ *
+ * @return void
+ */
 void APP_startProgram(void) {
     while (1) {
         switch (u8_g_appState) {
@@ -358,7 +372,7 @@ void APP_startProgram(void) {
 /**
  * @brief Used to switch between app states to initialize standard UI elements before main app flow (loop)
  *
- * @param [in]u8_a_state state to set (APP_STATE_RUNNING, APP_STATE_...)
+ * @param [in]u8_a_state state to set (APP_STATE_LAUNCH, APP_STATE_...)
  *
  * @return void
  */
@@ -403,7 +417,9 @@ void APP_switchState(u8 u8_a_state) {
     u8_g_appState = u8_a_state; // globally set new app state
 }
 
-// Ran when an INT0 interrupt is fired / Card inserted
+/**
+ * Ran when an INT0 interrupt is fired / Card inserted, switches app state to INSERT_PIN
+ */
 void APP_trigger(void) {
     // receive SPI data
     if (u8_g_appState == APP_STATE_LAUNCH) APP_switchState(APP_STATE_INSERT_PIN);
