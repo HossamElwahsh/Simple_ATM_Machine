@@ -129,10 +129,6 @@ u8 SPI_transceiver(u8 u8_a_byte)
 
     SPI_U8_SPDR_REG = u8_a_byte;
 
-    // Notify master to receive data (falling edge)
-    DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_HIGH);
-    DIO_write(SPI_SLAVE_SEND_NOTIFY_PIN, SPI_PORT, DIO_U8_PIN_LOW);
-
     while(!GET_BIT(SPI_U8_SPSR_REG, SPI_SPSR_SPIF_BIT));
 
     u8 u8_l_receivedByte = SPI_U8_SPDR_REG;
