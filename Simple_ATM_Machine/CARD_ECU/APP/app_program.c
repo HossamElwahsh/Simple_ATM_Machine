@@ -11,8 +11,7 @@
 
 /*******************************************************************************************************************************************************************/
 /* Declaration and Initialization */
-static u8 u8_gs_currentMode = APP_U8_PROG_MODE;
-static u8 u8_gs_resetFlag = APP_U8_FLAG_DOWN;
+static u8 u8_gs_appMode = APP_U8_PROG_MODE;
 
 static u8 u8_gs_cardPAN[25] = { 0 };
 static u8 u8_gs_newPIN1[10] = { 0 };
@@ -56,39 +55,21 @@ void APP_initialization   ( void )
 */
 void APP_startProgram	  ( void )
 {
-			
+	/* Check 1: There is Data (PAN & PIN) previously stored in Memory (EEPROM) */			
 	if ( APP_checkDataInMemory() == APP_U8_DATA_FOUND )
 	{
-		u8 u8_l_userInput = 0;
-						
-		/* Step 1: Display "Please press 1 for entering user mode and 2 for programming mode:" on terminal */
-		UART_transmitString( ( u8 * ) "Please press 1 for entering user mode and 2 for programming mode: " );
-			
-		/* Step 2: Receive UsrInput value */
-		UART_receiveByteBlock( &u8_l_userInput );
-			
-		/* Check 1.1: Required usrInput */
-		switch ( u8_l_userInput )
-		{
-			case '1': u8_gs_currentMode = APP_U8_USER_MODE; break;
-			case '2': u8_gs_currentMode = APP_U8_PROG_MODE; break;
-		}
+		APP_checkUSerInput();
 	}
 	
 	/* Toggle Forever */
 	while(1)
 	{		
-		/* Check 1: Required currentMode */
-		switch ( u8_gs_currentMode )
+		/* Check 2: Required currentMode */
+		switch ( u8_gs_appMode )
 		{
-			case APP_U8_PROG_MODE:
-			
-				u8_gs_resetFlag = APP_U8_FLAG_UP;
-				
-				APP_programmerMode();
-				
-				u8_gs_currentMode = APP_U8_USER_MODE;
-				
+			case APP_U8_PROG_MODE:				
+				APP_programmerMode();				
+				u8_gs_appMode = APP_U8_USER_MODE;				
 				break;
 				
 			case APP_U8_USER_MODE:
@@ -110,6 +91,36 @@ void APP_startProgram	  ( void )
 //	SPI_send(0b00000011); // 3
 //	SPI_send(0b00000100); // 4
     //TIMER_delay_ms(500);
+}
+
+/*******************************************************************************************************************************************************************/
+/*
+ Name: APP_checkUserInput
+ Input: void
+ Output: void
+ Description: Function to validate user's input.
+*/
+void APP_checkUserInput	  ( void )
+{
+	u8 u8_l_userInput = 0;
+	
+	/* Loop: Until user enters a valid input */
+	while ( ( u8_l_userInput != '1' ) || ( u8_l_userInput != '2' ) )
+	{
+		/* Step 1: Display "Please press 1 for entering user mode and 2 for programming mode:" on terminal */
+		UART_transmitString( ( u8 * ) "Please press 1 for entering user mode and 2 for programming mode: " );
+		
+		/* Step 2: Receive UsrInput value */
+		UART_receiveByteBlock( &u8_l_userInput );
+		
+		/* Check 1.1: Required usrInput */
+		switch ( u8_l_userInput )
+		{
+			case '1': u8_gs_appMode = APP_U8_USER_MODE; break;
+			case '2': u8_gs_appMode = APP_U8_PROG_MODE; break;
+			default : UART_transmitString( ( u8 * ) ">> Wrong Input, Try Again\r\r" );
+		}
+	}
 }
 
 /*******************************************************************************************************************************************************************/
@@ -217,7 +228,7 @@ void APP_programmerMode   ( void )
 	u8 u8_l_validPANFlag  = APP_U8_FLAG_DOWN;
 	u8 u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 	u8 u8_l_charFlag = APP_U8_FLAG_DOWN;
-		
+	
 	u8 u8_l_newPIN2[10] = { 0 };
 	
 	u8 u8_l_recData = 0;	
@@ -258,6 +269,7 @@ void APP_programmerMode   ( void )
 				u8_l_charFlag = APP_U8_FLAG_UP;
 				break;
 			}
+			
 			u8_l_index++;
 		}
 				
@@ -344,7 +356,8 @@ void APP_programmerMode   ( void )
 			{
 				u8_l_charFlag = APP_U8_FLAG_UP;
 				break;
-			}			
+			}
+			
 			u8_l_index++;
 		}
 			
@@ -379,11 +392,12 @@ void APP_programmerMode   ( void )
 */
 void APP_userMode	      ( void )
 {
-	/* Notify ATM ECU to receive data (falling edge) */
+	/* Step 1: Notify ATM ECU to receive data (falling edge) */
 	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_HIGH);
 	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_LOW );
 	
-	// SPI
+	/* Step 2: Get response from ATM ECU using SPI */
+	SPI
 }
 
 /*******************************************************************************************************************************************************************/

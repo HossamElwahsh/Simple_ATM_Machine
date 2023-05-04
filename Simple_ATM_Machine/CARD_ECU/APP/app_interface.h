@@ -15,7 +15,6 @@
 /* LIB */
 #include "../LIB/std.h"
 #include "../LIB/bit_math.h"
-//#include <stdio.h>
 #include <string.h>
 
 /* MCAL */
@@ -55,6 +54,7 @@ void APP_initialization   ( void );
 void APP_startProgram	  ( void );
 
 u8   APP_checkDataInMemory( void );
+void APP_checkUserInput	  ( void );
 
 void APP_programmerMode   ( void );
 void APP_userMode	      ( void );
