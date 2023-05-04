@@ -167,15 +167,23 @@ void APP_startProgram(void) {
                     // todo wait for long 0 press then SPI verify PIN
                     // verify PIN
                     LCD_clear();
-                    LCD_setCursor(LCD_LINE0, LCD_COL1);
-                    LCD_sendString((u8 *) "Please wait...");
-                    TIMER_delay_ms(1500);
-                    break;
-                    // todo uncomment SPI block
-                    /*SPI_transceiver(APP_CMD_PIN_READY);
+                    LCD_setCursor(LCD_LINE0, LCD_COL2);
+                    LCD_sendString((u8 *) "Please wait\nVerifying");
+                    // todo updated verifying dots every couple of commands to not block user out without feedback
+                    // to bypass verification enable this break
+//                    break;
 
                     u8 u8_l_response = 0;
+                    u8 u8_l_cursor = LCD_COL9;
                     while (u8_l_response != APP_RESP_PIN_OK && u8_l_response != APP_RESP_PIN_WRONG) {
+                        LCD_setCursor(LCD_LINE1, u8_l_cursor);
+                        LCD_sendChar('.');
+                        if(u8_l_cursor == LCD_COL15) {
+                            u8_l_cursor = LCD_COL8;
+                            LCD_setCursor(LCD_LINE1, LCD_COL9);
+                            LCD_sendString((u8 *)"        ");
+                        }
+                        u8_l_cursor++;
                         u8_l_response = SPI_transceiver(APP_CMD_WAIT_FOR_SLAVE_REQ);
                         switch (u8_l_response) {
                             case APP_RESP_PIN0:
@@ -194,6 +202,7 @@ void APP_startProgram(void) {
                                 // ignore
                                 break;
                         }
+                        TIMER_delay_ms(100);
                     }
                     if (u8_l_response == APP_RESP_PIN_OK) {
                         break;
@@ -203,18 +212,40 @@ void APP_startProgram(void) {
                         sprintf((char *) str_l_wrongPinMessage, "Wrong PIN (%d/3)", u8_l_trials);
                         LCD_sendString(str_l_wrongPinMessage);
                         TIMER_delay_ms(700);
-                    }*/
+                    }
                 }
 
-                if (u8_l_trials < 3) // PIN OK
-                {
-                    APP_switchState(APP_STATE_TRANSACTING);
-                } else { // Wrong PIN for 3 u8_l_trials lock the system
+                if (u8_l_trials >= 3) // PIN WRONG 3 times
+                { // Wrong PIN for 3 u8_l_trials lock the system
                     APP_switchState(APP_STATE_LOCKED);
+                    break; // case APP_STATE_INSERT_PIN Break
                 }
 
-                break;
+                // todo request PAN
+                /*u8 u8_l_response = 0;
+                while (u8_l_response != APP_RESP_PIN_OK && u8_l_response != APP_RESP_PIN_WRONG) {
+                    u8_l_response = SPI_transceiver(APP_CMD_WAIT_FOR_SLAVE_REQ);
+                    switch (u8_l_response) {
+                        case APP_RESP_PIN0:
+                            SPI_transceiver(u8_l_currentPin[0]);
+                            break;
+                        case APP_RESP_PIN1:
+                            SPI_transceiver(u8_l_currentPin[1]);
+                            break;
+                        case APP_RESP_PIN2:
+                            SPI_transceiver(u8_l_currentPin[2]);
+                            break;
+                        case APP_RESP_PIN3:
+                            SPI_transceiver(u8_l_currentPin[3]);
+                            break;
+                        default:
+                            // ignore
+                            break;
+                    }
+                }*/
 
+                APP_switchState(APP_STATE_TRANSACTING);
+                break; // case APP_STATE_INSERT_PIN Break
             case APP_STATE_TRANSACTING:
                 APP_ACTION_SHOW_CURSOR
 
@@ -347,7 +378,7 @@ void APP_startProgram(void) {
                             "New Balance:\n    %ld.%d",
                             (long)accountsDB[u8_l_accountIndex].f32_balance,
                             (u8)((accountsDB[u8_l_accountIndex].f32_balance - (long)accountsDB[u8_l_accountIndex].f32_balance)*100.0f)
-                            );
+                    );
                     LCD_sendString((u8 *) str_l_newBalanceMsg);   // Show new balance on LCD
                     TIMER_delay_ms(APP_DELAY_APPROVED_MSG);     // Delay
 
