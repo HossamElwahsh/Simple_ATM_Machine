@@ -58,7 +58,7 @@ void APP_startProgram	  ( void )
 	/* Check 1: There is Data (PAN & PIN) previously stored in Memory (EEPROM) */			
 	if ( APP_checkDataInMemory() == APP_U8_DATA_FOUND )
 	{
-		APP_checkUSerInput();
+		APP_checkUserInput();
 	}
 	
 	/* Toggle Forever */
@@ -108,7 +108,7 @@ void APP_checkUserInput	  ( void )
 	while ( ( u8_l_userInput != '1' ) || ( u8_l_userInput != '2' ) )
 	{
 		/* Step 1: Display "Please press 1 for entering user mode and 2 for programming mode:" on terminal */
-		UART_transmitString( ( u8 * ) "Please press 1 for entering user mode and 2 for programming mode: " );
+		UART_transmitString( ( u8 * ) "Please choose:\r(1) For User Mode\r(2) For Programming Mode\r<< Your Input: " );
 		
 		/* Step 2: Receive UsrInput value */
 		UART_receiveByteBlock( &u8_l_userInput );
@@ -221,7 +221,7 @@ u8   APP_checkDataInMemory( void )
  Name: APP_programmerMode
  Input: void
  Output: void
- Description: Function to start program.
+ Description: Function to implement Programmer Mode flow.
 */
 void APP_programmerMode   ( void )
 {
@@ -388,16 +388,49 @@ void APP_programmerMode   ( void )
  Name: APP_userMode
  Input: void
  Output: void
- Description: Function to start program.
+ Description: Function to implement User Mode flow.
 */
 void APP_userMode	      ( void )
 {
-	/* Step 1: Notify ATM ECU to receive data (falling edge) */
+	u8 u8_l_dummyData = 0;
+	u8 u8_l_recPIN[5] = { 0 };
+	
+	/* Step 1: Send a notification to ATM ECU to receive data (falling edge) */
 	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_HIGH);
 	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_LOW );
 	
-	/* Step 2: Get response from ATM ECU using SPI */
-	SPI
+	/* Step 2: Receive response "PIN_READY" from ATM ECU */
+	/* Loop: Until response is received using SPI */
+	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_PIN_READY );
+	
+	/* Step 3: Send response "PIN_READY" to ATM ECU */
+	SPI_transceiver( APP_CMD_RECV_READY );
+	
+	/* Step 4: Receive PIN from ATM ECU */
+	/* Loop: Until PIN is received using SPI */
+	for ( u8 u8_l_index = 0; u8_l_index < 4; u8_l_index++ )
+	{
+		/* Step 5: Send response "RECV_PIN" to ATM ECU */
+		SPI_transceiver( APP_CMD_RECV_PIN + u8_l_index );
+		/* Step 6: Receive response PIN value byte by byte from ATM ECU */
+		u8_l_recPIN[u8_l_index] = SPI_transceiver( u8_l_dummyData );
+	}
+	
+	u8_l_recPIN[4] = '\0';
+	
+	/* Step 7: Compare PIN from Card ECU with the PIN received from ATM ECU */
+	/* Check 1: PINs are Identical */
+	if ( !( strcmp( u8_gs_newPIN1, u8_l_recPIN ) ) )
+	{
+		/* Step 8A: Send response "PIN_OK" to ATM ECU */
+		SPI_transceiver( APP_CMD_PIN_OK );
+	}
+	/* Check 2: PINs are not Identical */
+	else
+	{
+		/* Step 8B: Send response "PIN_WRONG" to ATM ECU */
+		SPI_transceiver( APP_CMD_PIN_WRONG );
+	}	
 }
 
 /*******************************************************************************************************************************************************************/

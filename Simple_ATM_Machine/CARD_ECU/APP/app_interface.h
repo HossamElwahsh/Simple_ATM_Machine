@@ -26,7 +26,6 @@
 
 /* HAL */
 #include "../HAL/eeprom/External_EEPROM.h"
-#include "../HAL/lcd/lcd_interface.h"
 
 /*******************************************************************************************************************************************************************/
 /* APP Macros */
@@ -46,6 +45,13 @@
 /* APP Data (PAN & PIN) in Memory (EEPROM) */
 #define APP_U8_DATA_NOT_FOUND	0
 #define APP_U8_DATA_FOUND		1
+
+/* APP SPI Commands */
+#define APP_CMD_PIN_READY		0xC1
+#define APP_CMD_RECV_READY		0xC2
+#define APP_CMD_RECV_PIN		0xA0
+#define APP_CMD_PIN_WRONG		0xF0
+#define APP_CMD_PIN_OK			0xF1
 
 /*******************************************************************************************************************************************************************/
 /* APP Functions' Prototypes */

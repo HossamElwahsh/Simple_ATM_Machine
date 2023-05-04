@@ -144,18 +144,6 @@
     <Compile Include="HAL\eeprom\External_EEPROM.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="HAL\lcd\lcd_config.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\lcd\lcd_interface.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\lcd\lcd_private.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="HAL\lcd\lcd_program.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="LIB\bit_math.h">
       <SubType>compile</SubType>
     </Compile>
@@ -228,7 +216,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APP" />
-    <Folder Include="HAL\lcd\" />
     <Folder Include="HAL\eeprom" />
     <Folder Include="MCAL" />
     <Folder Include="HAL" />
