@@ -33,23 +33,31 @@
 /* APP Macros */
 
 /* APP Modes */
-#define APP_U8_PROG_MODE	0
-#define APP_U8_USER_MODE	1
+#define APP_U8_PROG_MODE		0
+#define APP_U8_USER_MODE		1
 
 /* APP Flag States */
-#define APP_U8_FLAG_DOWN	0
-#define APP_U8_FLAG_UP		1
+#define APP_U8_FLAG_DOWN		0
+#define APP_U8_FLAG_UP			1
 
-/* APP Actions */
+/* APP PAN & PIN Addresses */
+#define APP_U16_PAN_ADDRESS		0x0000
+#define APP_U16_PIN_ADDRESS		0x002C
+
+/* APP Data (PAN & PIN) in Memory (EEPROM) */
+#define APP_U8_DATA_NOT_FOUND	0
+#define APP_U8_DATA_FOUND		1
 
 /*******************************************************************************************************************************************************************/
 /* APP Functions' Prototypes */
 
-void APP_initialization( void );
-void APP_startProgram  ( void );
+void APP_initialization   ( void );
+void APP_startProgram	  ( void );
 
-void APP_programmerMode( void );
-void APP_userMode	   ( void );
+u8   APP_checkDataInMemory( void );
+
+void APP_programmerMode   ( void );
+void APP_userMode	      ( void );
 
 /*******************************************************************************************************************************************************************/
 
