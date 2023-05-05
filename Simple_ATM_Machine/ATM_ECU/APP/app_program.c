@@ -120,8 +120,6 @@ void APP_startProgram(void) {
             case APP_STATE_INSERT_PIN:
 
                 // todo get PAN
-
-                // todo 3 u8_l_trials only, if failed lock and sound Alarm
                 LCD_clear(); // Clear LCD
                 u8 u8_l_trials = 0; // Init PIN trials
                 u8 u8_l_currentPin[APP_PIN_DIGITS+1]; // Init array buffer for PIN digits + a null character
@@ -186,8 +184,6 @@ void APP_startProgram(void) {
                     {
                         u8_l_response = SPI_transceiver(APP_CMD_PIN_READY);
                         if(u8_l_response == APP_RESP_PIN_REC_READY) break;
-						
-						TIMER_delay_ms(2000);
                     }
 
                     u8_l_response = 0;
