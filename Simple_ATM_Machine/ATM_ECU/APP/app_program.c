@@ -125,8 +125,10 @@ void APP_startProgram(void) {
                 LCD_clear(); // Clear LCD
                 u8 u8_l_trials = 0; // Init PIN trials
                 u8 u8_l_currentPin[APP_PIN_DIGITS+1]; // Init array buffer for PIN digits + a null character
-                u8 currentPosition = 0; // Current cursor position to track PIN digits entry
+                u8 currentPosition; // Current cursor position to track PIN digits entry
                 while (u8_l_trials < APP_MAX_TRIALS) {
+                    currentPosition = 0; // Current cursor position to track PIN digits entry
+
                     LCD_clear(); // Clear LCD
                     LCD_setCursor(LCD_LINE0, LCD_COL1);   // Center of first line for the next msg
                     LCD_sendString((u8 *) "Enter Your PIN");    // Display "Enter Your PIN" message and wait
