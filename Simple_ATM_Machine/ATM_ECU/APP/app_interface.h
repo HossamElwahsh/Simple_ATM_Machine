@@ -55,10 +55,13 @@
 /* APP COMM COMMANDS */
 #define APP_CMD_PIN_READY               0xC1
 #define APP_CMD_WAIT_FOR_SLAVE_REQ      0xC2
-#define APP_CMD_REQ_PAN                 0xC3
+#define APP_CMD_REQ_PAN                 0xC4
+#define APP_CMD_REQ_PAN_LEN             0xC5
+#define APP_CMD_REQ_PAN_INDEX0          0xA0
+#define APP_CMD_REQ_PAN_OK              0xF0 // Received full PAN digits, CARD/Slave can stop replying
 
 /* APP COMM RESPONSES */
-#define APP_RESP_PIN_REC_READY      0xC2
+#define APP_RESP_ACK      0xC2
 #define APP_RESP_PIN0 0xA0      // Slave requesting PIN digit with index 0
 #define APP_RESP_PIN1 0xA1      // Slave requesting PIN digit with index 1
 #define APP_RESP_PIN2 0xA2      // Slave requesting PIN digit with index 2

@@ -39,7 +39,7 @@ ST_accountsDB_t accountsDB[APP_MAX_DB_SIZE] =                                /* 
 /* Global variables */
 f32 f32_g_maxAllowedDailyLimit = 5000.0f; // Maximum allowed daily transaction limit
 u8 u8_g_appState = APP_STATE_LAUNCH; // Current App State
-u8 str_g_currentPAN[20] = "4946084897338284";
+u8 str_g_currentPAN[20] = {'\0'};
 
 /**
  * @brief Initializes the application by initializing the MCAL and HAL components.
@@ -119,7 +119,6 @@ void APP_startProgram(void) {
                 break;
             case APP_STATE_INSERT_PIN:
 
-                // todo get PAN
                 LCD_clear(); // Clear LCD
                 u8 u8_l_trials = 0; // Init PIN trials
                 u8 u8_l_currentPin[APP_PIN_DIGITS+1]; // Init array buffer for PIN digits + a null character
@@ -179,11 +178,10 @@ void APP_startProgram(void) {
                     // break;
 
                     // PIN ready ACK from slave
-                    u8 u8_l_response;
-                    while(1)
+                    u8 u8_l_response = 0;
+                    while(u8_l_response != APP_RESP_ACK)
                     {
                         u8_l_response = SPI_transceiver(APP_CMD_PIN_READY);
-                        if(u8_l_response == APP_RESP_PIN_REC_READY) break;
                     }
 
                     u8_l_response = 0;
@@ -242,28 +240,44 @@ void APP_startProgram(void) {
                     break; // case APP_STATE_INSERT_PIN Break
                 }
 
-                // todo request PAN
-                /*u8 u8_l_response = 0;
-                while (u8_l_response != APP_RESP_PIN_OK && u8_l_response != APP_RESP_PIN_WRONG) {
-                    u8_l_response = SPI_transceiver(APP_CMD_WAIT_FOR_SLAVE_REQ);
-                    switch (u8_l_response) {
-                        case APP_RESP_PIN0:
-                            SPI_transceiver(u8_l_currentPin[0]);
-                            break;
-                        case APP_RESP_PIN1:
-                            SPI_transceiver(u8_l_currentPin[1]);
-                            break;
-                        case APP_RESP_PIN2:
-                            SPI_transceiver(u8_l_currentPin[2]);
-                            break;
-                        case APP_RESP_PIN3:
-                            SPI_transceiver(u8_l_currentPin[3]);
-                            break;
-                        default:
-                            // ignore
-                            break;
+                // PIN OK, fetch account data (PAN)
+                LCD_clear();
+                LCD_sendString((u8 *) "Retrieving\naccount data...");
+                u8 u8_l_response = 0;
+
+                // Start PAN request SPI comm and wait for ACK
+                while(u8_l_response != APP_RESP_ACK)
+                {
+                    u8_l_response = SPI_transceiver(APP_CMD_REQ_PAN);
+                }
+
+
+                // Request PAN length
+                u8 u8_l_panLength = 0;
+                while(u8_l_panLength < 16 || u8_l_panLength > 19) // Valid PAN Length
+                {
+                    u8_l_panLength = SPI_transceiver(APP_CMD_REQ_PAN_LEN);
+                }
+
+                // Fetch All PAN digits (with validation)
+                u8 u8_l_currentPanIndex = 0;
+                while(u8_l_currentPanIndex < u8_l_panLength)
+                {
+                    u8_l_response = SPI_transceiver(APP_CMD_REQ_PAN_INDEX0 + u8_l_currentPanIndex);
+                    if(u8_l_response >= '0' && u8_l_response <= '9') // valid ASCII number
+                    {
+                        str_g_currentPAN[u8_l_currentPanIndex] = u8_l_response;
+                        u8_l_currentPanIndex++;
                     }
-                }*/
+                }
+
+                str_g_currentPAN[u8_l_currentPanIndex] = '\0'; // null-terminating character
+
+                u8_l_response = 0;
+                while(u8_l_response != APP_RESP_ACK)
+                {
+                    u8_l_response = SPI_transceiver(APP_CMD_REQ_PAN_OK);
+                }
 
                 APP_switchState(APP_STATE_TRANSACTING);
                 break; // case APP_STATE_INSERT_PIN Break
