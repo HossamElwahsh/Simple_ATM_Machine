@@ -339,6 +339,7 @@ void APP_startProgram(void) {
                 APP_ACTION_HIDE_CURSOR
                 KPD_disableKPD(); // Disable keypad
 
+                LCD_clear();
                 LCD_setCursor(LCD_LINE0, LCD_COL1);
                 LCD_sendString((u8 *) "Please wait...");
                 TIMER_delay_ms(700);
@@ -359,6 +360,7 @@ void APP_startProgram(void) {
                     }
                 }
 
+                LCD_shiftClear();
                 if (!u8_l_accountExists) {
                     LCD_setCursor(LCD_LINE0, LCD_COL0);
                     LCD_sendString((u8 *) "   Fraud Card   ");
