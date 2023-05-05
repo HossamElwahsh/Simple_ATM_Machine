@@ -51,7 +51,7 @@ void APP_startProgram	  ( void )
 	/* Check 1: There is Data (PAN & PIN) previously stored in Memory (EEPROM) */			
 	if ( APP_checkDataInMemory() == APP_U8_DATA_FOUND )
 	{
-		APP_checkUserInput();
+		u8_gs_appMode = APP_U8_LAUNCH_MODE;		
 	}
 	
 	/* Toggle Forever */
@@ -67,6 +67,11 @@ void APP_startProgram	  ( void )
 				
 			case APP_U8_USER_MODE:
 				APP_userMode();
+				u8_gs_appMode = APP_U8_LAUNCH_MODE;
+				break;
+			
+			case APP_U8_LAUNCH_MODE:
+				APP_checkUserInput();
 				break;
 		}
 	}
@@ -188,7 +193,7 @@ void APP_checkUserInput	  ( void )
 	while ( ( u8_l_userInput != '1' ) && ( u8_l_userInput != '2' ) )
 	{
 		/* Step 1: Display "Please press 1 for entering user mode and 2 for programming mode:" on terminal */
-		UART_transmitString( ( u8 * ) "Please choose:\r(1) For User Mode\r(2) For Programming Mode\r<< Your Input: " );
+		UART_transmitString( ( u8 * ) "\r\rPlease choose:\r(1) For User Mode\r(2) For Programming Mode\r\r<< Your Input: " );
 		
 		/* Step 2: Receive UsrInput value */
 		UART_receiveByteBlock( &u8_l_userInput );

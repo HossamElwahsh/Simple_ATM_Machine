@@ -33,6 +33,7 @@
 /* APP Modes */
 #define APP_U8_PROG_MODE		0
 #define APP_U8_USER_MODE		1
+#define APP_U8_LAUNCH_MODE		2
 
 /* APP Flag States */
 #define APP_U8_FLAG_DOWN		0
