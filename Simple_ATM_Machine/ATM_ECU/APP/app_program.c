@@ -122,12 +122,18 @@ void APP_startProgram(void) {
                 // todo get PAN
 
                 // todo 3 u8_l_trials only, if failed lock and sound Alarm
-                LCD_setCursor(LCD_LINE1, LCD_COL6); // first pin digit position
-                APP_ACTION_SHOW_CURSOR
-                u8 u8_l_trials = 0;
-                u8 u8_l_currentPin[APP_PIN_DIGITS+1]; // digits + null character
+                LCD_clear(); // Clear LCD
+                u8 u8_l_trials = 0; // Init PIN trials
+                u8 u8_l_currentPin[APP_PIN_DIGITS+1]; // Init array buffer for PIN digits + a null character
+                u8 currentPosition = 0; // Current cursor position to track PIN digits entry
                 while (u8_l_trials < APP_MAX_TRIALS) {
-                    u8 currentPosition = 0;
+                    LCD_clear(); // Clear LCD
+                    LCD_setCursor(LCD_LINE0, LCD_COL1);   // Center of first line for the next msg
+                    LCD_sendString((u8 *) "Enter Your PIN");    // Display "Enter Your PIN" message and wait
+                    LCD_setCursor(LCD_LINE1, LCD_COL6);   // Center of second line for the next msg
+                    LCD_sendString((u8 *) "____");              // Display Placeholders for PIN
+                    LCD_setCursor(LCD_LINE1, LCD_COL6);   // first pin digit position
+                    APP_ACTION_SHOW_CURSOR
 
                     // Poll inputs
                     u8 u8_l_btn = KPD_U8_KEY_NOT_PRESSED;
@@ -164,12 +170,10 @@ void APP_startProgram(void) {
 
                     // long press was detected, resuming
 
-                    // todo wait for long 0 press then SPI verify PIN
                     // verify PIN
                     LCD_clear();
                     LCD_setCursor(LCD_LINE0, LCD_COL2);
                     LCD_sendString((u8 *) "Please wait\nVerifying");
-                    // todo updated verifying dots every couple of commands to not block user out without feedback
                     // to bypass verification enable this break
                     // break;
 
@@ -221,10 +225,13 @@ void APP_startProgram(void) {
                         break;
                     } else if (u8_l_response == APP_RESP_PIN_WRONG) {
                         u8_l_trials++;
-                        u8 str_l_wrongPinMessage[16];
-                        sprintf((char *) str_l_wrongPinMessage, "Wrong PIN (%d/3)", u8_l_trials);
-                        LCD_sendString(str_l_wrongPinMessage);
-                        TIMER_delay_ms(700);
+
+                        LCD_clear(); // clear LCD, reset cursor
+                        u8 str_l_wrongPinMessage[16]; // string buffer for wrong pin message UI
+                        sprintf((char *) str_l_wrongPinMessage, "Wrong PIN (%d/3)", u8_l_trials); // convert trials to text
+                        LCD_sendString(str_l_wrongPinMessage); // show wrong msg on LCD
+
+                        TIMER_delay_ms(APP_DELAY_ERROR_MSG);
                     }
                 }
 
@@ -433,13 +440,6 @@ void APP_switchState(u8 u8_a_state) {
             LCD_setCursor(LCD_LINE0, LCD_COL2);
             LCD_sendString((u8 *) "Insert Card");     // Display Insert card message and wait
             break;
-        case APP_STATE_INSERT_PIN:
-            LCD_clear();
-            LCD_setCursor(LCD_LINE0, LCD_COL1);  // Center of first line for the next msg
-            LCD_sendString((u8 *) "Enter Your PIN");    // Display "Enter Your PIN" message and wait
-            LCD_setCursor(LCD_LINE1, LCD_COL6);  // Center of second line for the next msg
-            LCD_sendString((u8 *) "____");              // Display Placeholders for PIN
-            break;
         case APP_STATE_TRANSACTING:
             KPD_enableKPD();   // Enable keypad
             LCD_clear();
@@ -466,5 +466,5 @@ void APP_switchState(u8 u8_a_state) {
  */
 void APP_trigger(void) {
     // receive SPI data
-    if (u8_g_appState == APP_STATE_LAUNCH) APP_switchState(APP_STATE_INSERT_PIN);
+    if (u8_g_appState == APP_STATE_LAUNCH) u8_g_appState = APP_STATE_INSERT_PIN;
 }
