@@ -489,7 +489,7 @@ u8	 APP_receivePINFromATM( void )
 void APP_sendPANToATM	  ( void )
 {
 	u8 u8_l_dummyData = 0xDD;
-	
+
 	/* Step 1: Receive request "PAN_REQ" from ATM ECU */
 	/* Loop: Until request is received using SPI */
 	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_REQ );
@@ -497,7 +497,7 @@ void APP_sendPANToATM	  ( void )
 	/* Step 2: Send response "CARD_ACK" to ATM ECU */
 	SPI_transceiver( APP_RESP_CARD_ACK );
 	
-	/* Step 3: Receive request "PAN_LEN_REQ " from ATM ECU */
+	/* Step 3: Receive request "PAN_LEN_REQ" from ATM ECU */
 	/* Loop: Until request is received using SPI */
 	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_LEN_REQ );
 		
@@ -508,17 +508,21 @@ void APP_sendPANToATM	  ( void )
 	/* Loop: Until request is received using SPI */
 	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_INDEX_0_REQ );
 	
-	/* Step 6: Send PAN to ATM ECU */
-	/* Loop: Until PAN is sent using SPI */
-	for ( u8 u8_l_index = 0; u8_l_index < u8_gs_PANSize; u8_l_index++ )
-	{
-		/* Step 6.1: Send PAN byte by byte to ATM ECU */
-		SPI_transceiver( u8_gs_newPIN1[u8_l_index] );
-	}
+	u8 u8_l_response = 0;
 	
-	/* Step 7: Receive response "ATM_PAN_OK" from ATM ECU */
+	/* Step 6: Send PAN to ATM ECU, then Receive response "ATM_PAN_OK" from ATM ECU */
 	/* Loop: Until response is received using SPI */
-	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_OK );
+	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_OK )
+	{			
+		u8_l_response = SPI_transceiver( u8_l_dummyData );
+		
+		/* Check : Receive a valid response from ATM ECU  */
+		if ( ( u8_l_response >= APP_CMD_ATM_PAN_INDEX_0_REQ ) && ( u8_l_response <= APP_CMD_ATM_PAN_INDEX_0_REQ + u8_gs_PANSize - 1) )
+		{
+			/* Step 6.1: Send PAN byte by byte to ATM ECU */
+			SPI_transceiver( u8_gs_cardPAN[u8_l_response - APP_CMD_ATM_PAN_INDEX_0_REQ] );
+		}
+	}
 	
 	/* Step 8: Send response "CARD_ACK" to ATM ECU */
 	SPI_transceiver( APP_RESP_CARD_ACK );
