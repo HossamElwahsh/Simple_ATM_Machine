@@ -182,6 +182,7 @@ void APP_startProgram(void) {
                     while(u8_l_response != APP_RESP_CARD_ACK)
                     {
                         u8_l_response = SPI_transceiver(APP_CMD_ATM_PIN_READY);
+                        TIMER_delay_ms(APP_DELAY_SPI);
                     }
 
                     u8_l_response = 0;
@@ -249,6 +250,7 @@ void APP_startProgram(void) {
                 while(u8_l_response != APP_RESP_CARD_ACK)
                 {
                     u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_REQ);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
 
@@ -257,6 +259,7 @@ void APP_startProgram(void) {
                 while(u8_l_panLength < 16 || u8_l_panLength > 19) // Valid PAN Length
                 {
                     u8_l_panLength = SPI_transceiver(APP_CMD_ATM_PAN_LEN_REQ);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
                 // Fetch All PAN digits (with validation)
@@ -278,6 +281,7 @@ void APP_startProgram(void) {
                 while(u8_l_response != APP_RESP_CARD_ACK)
                 {
                     u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_OK);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
                 APP_switchState(APP_STATE_TRANSACTING);

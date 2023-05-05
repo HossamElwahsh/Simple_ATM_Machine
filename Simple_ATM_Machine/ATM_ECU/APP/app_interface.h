@@ -43,7 +43,7 @@
 #define APP_DELAY_WELCOME_MSG   1000
 #define APP_DELAY_ERROR_MSG     1000
 #define APP_DELAY_APPROVED_MSG  1000
-#define APP_DELAY_SPI           100
+#define APP_DELAY_SPI           50
 
 
 /* APP STATES */
