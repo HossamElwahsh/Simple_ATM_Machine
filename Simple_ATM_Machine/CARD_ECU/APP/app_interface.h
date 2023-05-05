@@ -46,16 +46,18 @@
 #define APP_U8_DATA_NOT_FOUND	0
 #define APP_U8_DATA_FOUND		1
 
-/* APP SPI Commands and States */
-#define APP_CMD_ATM_PIN_READY	0xC1
-#define APP_CMD_ATM_PAN_REQ		0xC2
+/* APP ATM/Master COMM COMMANDS */
+#define APP_CMD_ATM_PIN_READY           0xC1 // ATM sends PIN is ready
+#define APP_CMD_ATM_PAN_REQ             0xC3 // ATM requests PAN
+#define APP_CMD_ATM_PAN_LEN_REQ         0xC4 // ATM requests PAN length
+#define APP_CMD_ATM_PAN_INDEX_0_REQ     0xA0 // ATM requests PAN digit with index 0
+#define APP_CMD_ATM_PAN_OK              0xF0 // ATM receives full PAN digits
 
-#define APP_CMD_CARD_ACK		0xC2
-
-#define APP_CMD_RECV_PIN		0xA0
-
-#define APP_STATE_PIN_OK		0xF0
-#define APP_STATE_PIN_WRONG		0xF5
+/* APP CARD/Slave COMM RESPONSES */
+#define APP_RESP_CARD_ACK				0x1A // CARD responses with Acknowledge
+#define APP_RESP_CARD_PIN_INDEX_0_REQ	0xA0 // CARD requests PIN digit with index 0
+#define APP_RESP_CARD_PIN_OK			0xF0 // CARD responses with PIN verification OK, PIN matches
+#define APP_RESP_CARD_PIN_WRONG			0xF5 // CARD responses with PIN verification Wrong, PIN doesn't match
 
 /*******************************************************************************************************************************************************************/
 /* APP Functions' Prototypes */
@@ -69,7 +71,7 @@ void APP_checkUserInput	  ( void );
 void APP_programmerMode   ( void );
 void APP_userMode	      ( void );
 
-void APP_receivePINFromATM( void );
+u8	 APP_receivePINFromATM( void );
 void APP_sendPANToATM	  ( void );
 
 /*******************************************************************************************************************************************************************/

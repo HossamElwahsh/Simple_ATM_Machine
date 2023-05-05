@@ -16,6 +16,8 @@ static u8 u8_gs_appMode = APP_U8_PROG_MODE;
 static u8 u8_gs_cardPAN[25] = { 0 };
 static u8 u8_gs_newPIN1[10] = { 0 };
 
+static u8 u8_gs_PANSize = 0;
+
 /*******************************************************************************************************************************************************************/
 /*
  Name: APP_initialization
@@ -110,20 +112,26 @@ u8   APP_checkDataInMemory( void )
 		u8_l_index++;
 	}
 	
+	/* Set NULL character in the end of string */
 	u8_gs_cardPAN[u8_l_index] = '\0';
-	u8_l_index--;
 	
 	/* Check 3: Retrieved Data has not a valid size of PAN (16 -> 19, and index starts from 0) */
-	if ( u8_l_index < 15 || u8_l_index > 18 )
+	if ( u8_l_index < 16 || u8_l_index > 19 )
 	{
 		/* Update DataFlag = DATA_NOT_FOUND */
 		u8_l_dataFlag = APP_U8_DATA_NOT_FOUND;
 	}
 	
-	/* Check 4: DataFlag is updated to DATA_NOT_FOUND, in order not to proceed other checks */
+	/* Check 4: Data (PAN) is not Found */
 	if ( u8_l_dataFlag == APP_U8_DATA_NOT_FOUND )
 	{
 		return u8_l_dataFlag;
+	}
+	/* Check 5: Data (PAN) is Found */
+	else
+	{
+		/* Update PANSize with the index */
+		u8_gs_PANSize = u8_l_index;
 	}
 	
 	u8_l_index = 0;
@@ -134,14 +142,14 @@ u8   APP_checkDataInMemory( void )
 	/* Loop: Until the end of Data */
 	while ( *pu8_l_PINCheck != '\0' )
 	{
-		/* Check 5: Retrieved Data is not a valid Numeric PIN */
-		if ( *pu8_l_PINCheck < 48 || *pu8_l_PINCheck > 57 )
+		/* Check 6: Retrieved Data is not a valid Numeric PIN */
+		if ( *pu8_l_PINCheck < '0' || *pu8_l_PINCheck > '9' )
 		{
 			/* Update DataFlag = DATA_NOT_FOUND */
 			u8_l_dataFlag = APP_U8_DATA_NOT_FOUND;
 			break;
 		}
-		/* Check 6: Retrieved Data is a valid Numeric PIN */
+		/* Check 7: Retrieved Data is a valid Numeric PIN */
 		else
 		{
 			/* Store retrieved PIN in NewPIN1 */
@@ -152,11 +160,11 @@ u8   APP_checkDataInMemory( void )
 		u8_l_index++;
 	}
 	
+	/* Set NULL character in the end of string */
 	u8_gs_newPIN1[u8_l_index] = '\0';
-	u8_l_index--;
 	
-	/* Check 7: Retrieved Data has not a valid size of PIN (4, and index starts from 0) */
-	if ( u8_l_index != 3 )
+	/* Check 8: Retrieved Data has not a valid size of PIN */
+	if ( u8_l_index != 4 )
 	{
 		/* Update DataFlag = DATA_NOT_FOUND */
 		u8_l_dataFlag = APP_U8_DATA_NOT_FOUND;
@@ -236,6 +244,7 @@ void APP_programmerMode   ( void )
 			u8_l_index++;
 		}
 		
+		/* Set NULL character in the end of string, and overwrite the Enter character */
 		u8_gs_cardPAN[u8_l_index - 1] = '\0';
 		
 		u8_l_index = 0;
@@ -243,7 +252,8 @@ void APP_programmerMode   ( void )
 		/* Loop: Until the end of PAN */
 		while ( u8_gs_cardPAN[u8_l_index] != '\0' )
 		{
-			if ( u8_gs_cardPAN[u8_l_index] < 48 || u8_gs_cardPAN[u8_l_index] > 57 )
+			/* Check 1: PAN is a non numeric */
+			if ( ( u8_gs_cardPAN[u8_l_index] < '0' ) || ( u8_gs_cardPAN[u8_l_index] > '9' ) )
 			{
 				u8_l_charFlag = APP_U8_FLAG_UP;
 				break;
@@ -252,7 +262,7 @@ void APP_programmerMode   ( void )
 			u8_l_index++;
 		}
 				
-		/* Check 1: PAN is a non numeric */
+		/* Check 2: PAN is a non numeric */
 		if ( u8_l_charFlag == APP_U8_FLAG_UP )
 		{
 			/* Display "Wrong PAN" on terminal */
@@ -261,7 +271,7 @@ void APP_programmerMode   ( void )
 			continue;
 		}
 				
-		/* Check 2: PAN is not in the valid range */
+		/* Check 3: PAN is not in the valid range */
 		if ( u8_l_index < 16 || u8_l_index > 19 )
 		{
 			/* Display "Wrong PAN" on terminal */
@@ -271,6 +281,10 @@ void APP_programmerMode   ( void )
 		}
 	}
 	
+	/* Update PANSize with the index */
+	u8_gs_PANSize = u8_l_index;
+	
+	/* Store Data (PAN) in Memory (EEPROM) */
 	EEPROM_writeArray( APP_U16_PAN_ADDRESS, u8_gs_cardPAN );
 		
 	UART_transmitString( ( u8 * ) "\r          <<<<<<<<<<<>>>>>>>>>>          \r\r" );
@@ -299,6 +313,7 @@ void APP_programmerMode   ( void )
 			u8_l_index++;
 		}
 		
+		/* Set NULL character in the end of string, and overwrite the Enter character */
 		u8_gs_newPIN1[u8_l_index - 1] = '\0';
 		
 		/* Step 5: Display "Please Confirm New PIN" on terminal */
@@ -315,6 +330,7 @@ void APP_programmerMode   ( void )
 			u8_l_index++;
 		}
 		
+		/* Set NULL character in the end of string, and overwrite the Enter character */
 		u8_l_newPIN2[u8_l_index - 1] = '\0';
 			
 		/* Check 1: Two PINs are not identical */
@@ -331,7 +347,8 @@ void APP_programmerMode   ( void )
 		/* Loop: Until the end of PIN */
 		while ( u8_gs_newPIN1[u8_l_index] != '\0' )
 		{
-			if ( u8_gs_newPIN1[u8_l_index] < 48 || u8_gs_newPIN1[u8_l_index] > 57 )
+			/* Check 2: PIN is a non numeric */
+			if ( u8_gs_newPIN1[u8_l_index] < '0' || u8_gs_newPIN1[u8_l_index] > '9' )
 			{
 				u8_l_charFlag = APP_U8_FLAG_UP;
 				break;
@@ -340,7 +357,7 @@ void APP_programmerMode   ( void )
 			u8_l_index++;
 		}
 			
-		/* Check 2: PIN is a non numeric */
+		/* Check 3: PIN is a non numeric */
 		if ( u8_l_charFlag == APP_U8_FLAG_UP )
 		{
 			/* Display "Wrong PIN" on terminal */
@@ -349,8 +366,8 @@ void APP_programmerMode   ( void )
 			continue;
 		}
 			
-		/* Check 3: PIN exceeds 4 digits */
-		if ( u8_l_index < 4 || u8_l_index > 4 )
+		/* Check 4: PIN is not equal to 4 digits */
+		if ( u8_l_index != 4 )
 		{
 			/* Display "Wrong PIN" on terminal */
 			UART_transmitString( ( u8 * ) ">> Wrong PIN [Not 4 Digits]\n\r\r" );
@@ -359,6 +376,7 @@ void APP_programmerMode   ( void )
 		}
 	}
 	
+	/* Store Data (PIN) in Memory (EEPROM) */
 	EEPROM_writeArray( APP_U16_PIN_ADDRESS, u8_gs_newPIN1 );
 }
 
@@ -371,19 +389,50 @@ void APP_programmerMode   ( void )
 */
 void APP_userMode	      ( void )
 {
-	APP_receivePINFromATM();
-	APP_sendPANToATM();
+	u8 u8_l_errorState = STD_OK;
+	static u8 u8_ls_insertPINTrials = 0;
+	
+	/* Loop: Until insertPINTrials reaches its maximum (i.e.: 3 trials) */
+	while ( u8_ls_insertPINTrials < 3 )
+	{
+		/* Step 1: Receive PIN from ATM ECU */
+		u8_l_errorState = APP_receivePINFromATM();
+		
+		/* Check 1: Invalid PIN is received from ATM ECU */
+		if ( u8_l_errorState == STD_NOK )
+		{
+			/* Increment InsertPINTrials */
+			u8_ls_insertPINTrials++;
+		}
+		/* Check 2: Valid PIN is received from ATM ECU */
+		else if ( u8_l_errorState == STD_OK )
+		{
+			break;
+		}
+	}
+	
+	/* Check 3: Valid PIN is received from ATM ECU */
+	if ( u8_l_errorState == STD_OK )
+	{
+		/* Step 2: Send PAN to ATM ECU */
+		APP_sendPANToATM();
+	}
+	
+	/* Reset InsertPINTrials */
+	u8_ls_insertPINTrials = 0;	
 }
 
 /*******************************************************************************************************************************************************************/
 /*
  Name: APP_receivePINFromATM
  Input: void
- Output: void
+ Output: u8 Error or No Error
  Description: Function to receive PIN from ATM ECU using SPI, and validate this PIN, then sends back validation result PIN_OK or PIN_WRONG.
 */
-void APP_receivePINFromATM   ( void )
+u8	 APP_receivePINFromATM( void )
 {
+	u8 u8_l_errorState = STD_OK;
+	
 	u8 u8_l_dummyData = 0xDD;
 	u8 u8_l_recPIN[5] = { 0 };
 		
@@ -396,18 +445,19 @@ void APP_receivePINFromATM   ( void )
 	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PIN_READY );
 		
 	/* Step 3: Send response "CARD_ACK" to ATM ECU */
-	SPI_transceiver( APP_CMD_CARD_ACK );
+	SPI_transceiver( APP_RESP_CARD_ACK );
 	
 	/* Step 4: Receive PIN from ATM ECU */
 	/* Loop: Until PIN is received using SPI */
 	for ( u8 u8_l_index = 0; u8_l_index < 4; u8_l_index++ )
 	{
-		/* Step 4.1: Send response "RECV_PIN" to ATM ECU */
-		SPI_transceiver( APP_CMD_RECV_PIN + u8_l_index );
+		/* Step 4.1: Send response "PIN_INDEX_0_REQ" to ATM ECU */
+		SPI_transceiver( APP_RESP_CARD_PIN_INDEX_0_REQ + u8_l_index );
 		/* Step 4.2: Receive response PIN value byte by byte from ATM ECU */
 		u8_l_recPIN[u8_l_index] = SPI_transceiver( u8_l_dummyData );
 	}
 		
+	/* Set NULL character in the end of string */
 	u8_l_recPIN[4] = '\0';
 		
 	/* Step 5: Compare PIN from Card ECU with the PIN received from ATM ECU */
@@ -415,14 +465,18 @@ void APP_receivePINFromATM   ( void )
 	if ( !( strcmp( u8_gs_newPIN1, u8_l_recPIN ) ) )
 	{
 		/* Step 5.1: Send response "PIN_OK" to ATM ECU */
-		SPI_transceiver( APP_STATE_PIN_OK );
+		SPI_transceiver( APP_RESP_CARD_PIN_OK );
 	}
 	/* Check 2: PINs are not Identical */
 	else
 	{
 		/* Step 5.2: Send response "PIN_WRONG" to ATM ECU */
-		SPI_transceiver( APP_STATE_PIN_WRONG );
+		SPI_transceiver( APP_RESP_CARD_PIN_WRONG );
+		/* Update error state = NOK, wrong PIN! */
+		u8_l_errorState = STD_NOK;
 	}
+	
+	return u8_l_errorState;
 }
 
 /*******************************************************************************************************************************************************************/
@@ -434,7 +488,40 @@ void APP_receivePINFromATM   ( void )
 */
 void APP_sendPANToATM	  ( void )
 {
+	u8 u8_l_dummyData = 0xDD;
 	
+	/* Step 1: Receive request "PAN_REQ" from ATM ECU */
+	/* Loop: Until request is received using SPI */
+	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_REQ );
+	
+	/* Step 2: Send response "CARD_ACK" to ATM ECU */
+	SPI_transceiver( APP_RESP_CARD_ACK );
+	
+	/* Step 3: Receive request "PAN_LEN_REQ " from ATM ECU */
+	/* Loop: Until request is received using SPI */
+	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_LEN_REQ );
+		
+	/* Step 4: Send response PAN length to ATM ECU */
+	SPI_transceiver( u8_gs_PANSize );
+	
+	/* Step 5: Receive request "PAN_INDEX_0_REQ" from ATM ECU */
+	/* Loop: Until request is received using SPI */
+	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_INDEX_0_REQ );
+	
+	/* Step 6: Send PAN to ATM ECU */
+	/* Loop: Until PAN is sent using SPI */
+	for ( u8 u8_l_index = 0; u8_l_index < u8_gs_PANSize; u8_l_index++ )
+	{
+		/* Step 6.1: Send PAN byte by byte to ATM ECU */
+		SPI_transceiver( u8_gs_newPIN1[u8_l_index] );
+	}
+	
+	/* Step 7: Receive response "ATM_PAN_OK" from ATM ECU */
+	/* Loop: Until response is received using SPI */
+	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PAN_OK );
+	
+	/* Step 8: Send response "CARD_ACK" to ATM ECU */
+	SPI_transceiver( APP_RESP_CARD_ACK );
 }
 
 /*******************************************************************************************************************************************************************/

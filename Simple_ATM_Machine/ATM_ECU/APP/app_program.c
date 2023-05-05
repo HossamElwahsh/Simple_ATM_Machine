@@ -179,15 +179,14 @@ void APP_startProgram(void) {
 
                     // PIN ready ACK from slave
                     u8 u8_l_response = 0;
-                    while(u8_l_response != APP_RESP_ACK)
+                    while(u8_l_response != APP_RESP_CARD_ACK)
                     {
-                        u8_l_response = SPI_transceiver(APP_CMD_PIN_READY);
-                        if(u8_l_response == APP_RESP_PIN_REC_READY) break;
+                        u8_l_response = SPI_transceiver(APP_CMD_ATM_PIN_READY);
                     }
 
                     u8_l_response = 0;
                     u8 u8_l_cursor = LCD_COL9;
-                    while (u8_l_response != APP_RESP_PIN_OK && u8_l_response != APP_RESP_PIN_WRONG) {
+                    while (u8_l_response != APP_RESP_CARD_PIN_OK && u8_l_response != APP_RESP_CARD_PIN_WRONG) {
 
                         // progress bar UI
                         //region Progress bar UI
@@ -201,18 +200,18 @@ void APP_startProgram(void) {
                         u8_l_cursor++;
                         //endregion
 
-                        u8_l_response = SPI_transceiver(APP_CMD_WAIT_FOR_SLAVE_REQ);
+                        u8_l_response = SPI_transceiver(APP_CMD_ATM_WAIT_FOR_CARD_RESP);
                         switch (u8_l_response) {
-                            case APP_RESP_PIN0:
+                            case APP_RESP_CARD_PIN_INDEX_0_REQ:
                                 SPI_transceiver(u8_l_currentPin[0]);
                                 break;
-                            case APP_RESP_PIN1:
+                            case APP_RESP_CARD_PIN_INDEX_1_REQ:
                                 SPI_transceiver(u8_l_currentPin[1]);
                                 break;
-                            case APP_RESP_PIN2:
+                            case APP_RESP_CARD_PIN_INDEX_2_REQ:
                                 SPI_transceiver(u8_l_currentPin[2]);
                                 break;
-                            case APP_RESP_PIN3:
+                            case APP_RESP_CARD_PIN_INDEX_3_REQ:
                                 SPI_transceiver(u8_l_currentPin[3]);
                                 break;
                             default:
@@ -221,9 +220,9 @@ void APP_startProgram(void) {
                         }
                         TIMER_delay_ms(100);
                     }
-                    if (u8_l_response == APP_RESP_PIN_OK) {
+                    if (u8_l_response == APP_RESP_CARD_PIN_OK) {
                         break;
-                    } else if (u8_l_response == APP_RESP_PIN_WRONG) {
+                    } else if (u8_l_response == APP_RESP_CARD_PIN_WRONG) {
                         u8_l_trials++;
 
                         LCD_clear(); // clear LCD, reset cursor
@@ -247,9 +246,9 @@ void APP_startProgram(void) {
                 u8 u8_l_response = 0;
 
                 // Start PAN request SPI comm and wait for ACK
-                while(u8_l_response != APP_RESP_ACK)
+                while(u8_l_response != APP_RESP_CARD_ACK)
                 {
-                    u8_l_response = SPI_transceiver(APP_CMD_REQ_PAN);
+                    u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_REQ);
                 }
 
 
@@ -257,14 +256,14 @@ void APP_startProgram(void) {
                 u8 u8_l_panLength = 0;
                 while(u8_l_panLength < 16 || u8_l_panLength > 19) // Valid PAN Length
                 {
-                    u8_l_panLength = SPI_transceiver(APP_CMD_REQ_PAN_LEN);
+                    u8_l_panLength = SPI_transceiver(APP_CMD_ATM_PAN_LEN_REQ);
                 }
 
                 // Fetch All PAN digits (with validation)
                 u8 u8_l_currentPanIndex = 0;
                 while(u8_l_currentPanIndex < u8_l_panLength)
                 {
-                    u8_l_response = SPI_transceiver(APP_CMD_REQ_PAN_INDEX0 + u8_l_currentPanIndex);
+                    u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_INDEX_0_REQ + u8_l_currentPanIndex);
                     if(u8_l_response >= '0' && u8_l_response <= '9') // valid ASCII number
                     {
                         str_g_currentPAN[u8_l_currentPanIndex] = u8_l_response;
@@ -275,9 +274,9 @@ void APP_startProgram(void) {
                 str_g_currentPAN[u8_l_currentPanIndex] = '\0'; // null-terminating character
 
                 u8_l_response = 0;
-                while(u8_l_response != APP_RESP_ACK)
+                while(u8_l_response != APP_RESP_CARD_ACK)
                 {
-                    u8_l_response = SPI_transceiver(APP_CMD_REQ_PAN_OK);
+                    u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_OK);
                 }
 
                 APP_switchState(APP_STATE_TRANSACTING);

@@ -52,19 +52,22 @@
 #define APP_STATE_LOCKED        51
 #define APP_STATE_TEST     250
 
-/* APP COMM COMMANDS */
-#define APP_CMD_ATM_PIN_READY           0xC1
-#define APP_CMD_WAIT_FOR_SLAVE_REQ      0xC2
-#define APP_CMD_REQ_PAN                 0xC3
+/* APP ATM/Master COMM COMMANDS */
+#define APP_CMD_ATM_PIN_READY           0xC1 // ATM sends PIN is ready
+#define APP_CMD_ATM_WAIT_FOR_CARD_RESP  0xC2 // ATM waits for CARD response
+#define APP_CMD_ATM_PAN_REQ             0xC3 // ATM requests PAN
+#define APP_CMD_ATM_PAN_LEN_REQ         0xC4 // ATM requests PAN length
+#define APP_CMD_ATM_PAN_INDEX_0_REQ     0xA0 // ATM requests PAN digit with index 0
+#define APP_CMD_ATM_PAN_OK              0xF0 // ATM receives full PAN digits
 
-/* APP COMM RESPONSES */
-#define APP_RESP_PIN_REC_READY      0xC2
-#define APP_RESP_PIN0 0xA0      // Slave requesting PIN digit with index 0
-#define APP_RESP_PIN1 0xA1      // Slave requesting PIN digit with index 1
-#define APP_RESP_PIN2 0xA2      // Slave requesting PIN digit with index 2
-#define APP_RESP_PIN3 0xA3      // Slave requesting PIN digit with index 3
-#define APP_RESP_PIN_OK 0xF0    // Slave response PIN verification OK, PIN match
-#define APP_RESP_PIN_WRONG 0xF5 // Slave response PIN verification fail, Wrong PIN
+/* APP CARD/Slave COMM RESPONSES */
+#define APP_RESP_CARD_ACK				0x1A // CARD responses with Acknowledge
+#define APP_RESP_CARD_PIN_INDEX_0_REQ	0xA0 // CARD requests PIN digit with index 0
+#define APP_RESP_CARD_PIN_INDEX_1_REQ	0xA1 // CARD requests PIN digit with index 1
+#define APP_RESP_CARD_PIN_INDEX_2_REQ	0xA2 // CARD requests PIN digit with index 2
+#define APP_RESP_CARD_PIN_INDEX_3_REQ	0xA3 // CARD requests PIN digit with index 3
+#define APP_RESP_CARD_PIN_OK			0xF0 // CARD responses with PIN verification OK, PIN matches
+#define APP_RESP_CARD_PIN_WRONG			0xF5 // CARD responses with PIN verification Wrong, PIN doesn't match
 
 /* APP Button */
 #define APP_BTN_ENTER_ZERO 2        // PIN 2
