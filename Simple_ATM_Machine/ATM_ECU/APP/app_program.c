@@ -96,7 +96,7 @@ void APP_startProgram(void) {
                     LCD_setCursor(LCD_LINE1, LCD_COL10);
                     LCD_sendString((u8 *) buffer);
                     count++;
-                    TIMER_delay_ms(100);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                     if (count == 8) {
                         count = 0;
                         SPI_stop();
@@ -218,7 +218,7 @@ void APP_startProgram(void) {
                                 // ignore
                                 break;
                         }
-                        TIMER_delay_ms(100);
+                        TIMER_delay_ms(APP_DELAY_SPI);
                     }
                     if (u8_l_response == APP_RESP_CARD_PIN_OK) {
                         break;
@@ -269,7 +269,7 @@ void APP_startProgram(void) {
                         str_g_currentPAN[u8_l_currentPanIndex] = u8_l_response;
                         u8_l_currentPanIndex++;
                     }
-                    TIMER_delay_ms(100);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
                 str_g_currentPAN[u8_l_currentPanIndex] = '\0'; // null-terminating character
