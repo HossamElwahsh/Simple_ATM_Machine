@@ -472,8 +472,9 @@ void APP_switchState(u8 u8_a_state) {
 
             break;
         case APP_STATE_LOCKED:
-            LCD_setCursor(LCD_LINE1, LCD_COL1);
-            LCD_sendString((u8 *) "System Locked");
+            LCD_setCursor(LCD_LINE1, LCD_COL0);
+            LCD_sendString((u8 *) "System Locked ");
+            LCD_sendChar(LCD_CUSTOMCHAR_LOC0);
             KPD_disableKPD();   // Disable keypad
             BUZZER_on();        // Alarm ON
         default:
