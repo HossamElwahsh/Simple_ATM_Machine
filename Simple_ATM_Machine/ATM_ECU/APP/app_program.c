@@ -96,7 +96,7 @@ void APP_startProgram(void) {
                     LCD_setCursor(LCD_LINE1, LCD_COL10);
                     LCD_sendString((u8 *) buffer);
                     count++;
-                    TIMER_delay_ms(100);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                     if (count == 8) {
                         count = 0;
                         SPI_stop();
@@ -182,6 +182,7 @@ void APP_startProgram(void) {
                     while(u8_l_response != APP_RESP_CARD_ACK)
                     {
                         u8_l_response = SPI_transceiver(APP_CMD_ATM_PIN_READY);
+                        TIMER_delay_ms(APP_DELAY_SPI);
                     }
 
                     u8_l_response = 0;
@@ -218,7 +219,7 @@ void APP_startProgram(void) {
                                 // ignore
                                 break;
                         }
-                        TIMER_delay_ms(100);
+                        TIMER_delay_ms(APP_DELAY_SPI);
                     }
                     if (u8_l_response == APP_RESP_CARD_PIN_OK) {
                         break;
@@ -249,6 +250,7 @@ void APP_startProgram(void) {
                 while(u8_l_response != APP_RESP_CARD_ACK)
                 {
                     u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_REQ);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
 
@@ -257,6 +259,7 @@ void APP_startProgram(void) {
                 while(u8_l_panLength < 16 || u8_l_panLength > 19) // Valid PAN Length
                 {
                     u8_l_panLength = SPI_transceiver(APP_CMD_ATM_PAN_LEN_REQ);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
                 // Fetch All PAN digits (with validation)
@@ -269,7 +272,7 @@ void APP_startProgram(void) {
                         str_g_currentPAN[u8_l_currentPanIndex] = u8_l_response;
                         u8_l_currentPanIndex++;
                     }
-                    TIMER_delay_ms(100);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
                 str_g_currentPAN[u8_l_currentPanIndex] = '\0'; // null-terminating character
@@ -278,6 +281,7 @@ void APP_startProgram(void) {
                 while(u8_l_response != APP_RESP_CARD_ACK)
                 {
                     u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_OK);
+                    TIMER_delay_ms(APP_DELAY_SPI);
                 }
 
                 APP_switchState(APP_STATE_TRANSACTING);
@@ -335,6 +339,7 @@ void APP_startProgram(void) {
                 APP_ACTION_HIDE_CURSOR
                 KPD_disableKPD(); // Disable keypad
 
+                LCD_clear();
                 LCD_setCursor(LCD_LINE0, LCD_COL1);
                 LCD_sendString((u8 *) "Please wait...");
                 TIMER_delay_ms(700);
@@ -355,6 +360,7 @@ void APP_startProgram(void) {
                     }
                 }
 
+                LCD_shiftClear();
                 if (!u8_l_accountExists) {
                     LCD_setCursor(LCD_LINE0, LCD_COL0);
                     LCD_sendString((u8 *) "   Fraud Card   ");
