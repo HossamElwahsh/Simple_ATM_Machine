@@ -29,12 +29,21 @@ void APP_initialization   ( void )
 	DIO_init( DIO_U8_PIN_0, PORT_B, DIO_OUT );
 	
 	TIMER_timer0NormalModeInit(DISABLED);
-	
-	SPI_init();	
+	SPI_init();
 	UART_initialization();
 
 	/* HAL Initialization */
 	EEPROM_init();
+	
+	
+    //u8 count = SPI_U8_DUMMY_VAL;
+	//
+    //SPI_init();
+	//
+    //while(1)
+    //{
+    //    count = SPI_transceiver(count);
+    //}
 }
 
 /*******************************************************************************************************************************************************************/
@@ -66,6 +75,50 @@ void APP_startProgram	  ( void )
 			case APP_U8_USER_MODE:
 				APP_userMode();
 				break;
+		}
+	}
+
+//    SPI_send(0xFF); //H << 1
+//    SPI_send(0xFF); //H << 1
+    //TIMER_delay_ms(500);
+//    SPI_send('H');
+//	SPI_send('H');
+//	SPI_send('H');
+//    SPI_send('i');
+//	SPI_send(0b00000001); // 1
+//	SPI_send(0b10000000); // 127
+//	SPI_send(0b00000010); // 2
+//	SPI_send(0b00000011); // 3
+//	SPI_send(0b00000100); // 4
+    //TIMER_delay_ms(500);
+}
+
+/*******************************************************************************************************************************************************************/
+/*
+ Name: APP_checkUserInput
+ Input: void
+ Output: void
+ Description: Function to validate user's input.
+*/
+void APP_checkUserInput	  ( void )
+{
+	u8 u8_l_userInput = 0;
+	
+	/* Loop: Until user enters a valid input */
+	while ( ( u8_l_userInput != '1' ) || ( u8_l_userInput != '2' ) )
+	{
+		/* Step 1: Display "Please press 1 for entering user mode and 2 for programming mode:" on terminal */
+		UART_transmitString( ( u8 * ) "Please choose:\r(1) For User Mode\r(2) For Programming Mode\r<< Your Input: " );
+		
+		/* Step 2: Receive UsrInput value */
+		UART_receiveByteBlock( &u8_l_userInput );
+		
+		/* Check 1.1: Required usrInput */
+		switch ( u8_l_userInput )
+		{
+			case '1': u8_gs_appMode = APP_U8_USER_MODE; break;
+			case '2': u8_gs_appMode = APP_U8_PROG_MODE; break;
+			default : UART_transmitString( ( u8 * ) ">> Wrong Input, Try Again\r\r" );
 		}
 	}
 }
@@ -110,11 +163,10 @@ u8   APP_checkDataInMemory( void )
 		u8_l_index++;
 	}
 	
-	u8_gs_cardPAN[u8_l_index] = '\0';
 	u8_l_index--;
 	
-	/* Check 3: Retrieved Data has not a valid size of PAN (16 -> 19, and index starts from 0) */
-	if ( u8_l_index < 15 || u8_l_index > 18 )
+	/* Check 3: Retrieved Data has not a valid size of PAN */
+	if ( u8_l_index < 16 || u8_l_index > 19 )
 	{
 		/* Update DataFlag = DATA_NOT_FOUND */
 		u8_l_dataFlag = APP_U8_DATA_NOT_FOUND;
@@ -152,47 +204,16 @@ u8   APP_checkDataInMemory( void )
 		u8_l_index++;
 	}
 	
-	u8_gs_newPIN1[u8_l_index] = '\0';
 	u8_l_index--;
 	
-	/* Check 7: Retrieved Data has not a valid size of PIN (4, and index starts from 0) */
-	if ( u8_l_index != 3 )
+	/* Check 7: Retrieved Data has not a valid size of PIN */
+	if ( u8_l_index < 4 || u8_l_index > 4 )
 	{
 		/* Update DataFlag = DATA_NOT_FOUND */
 		u8_l_dataFlag = APP_U8_DATA_NOT_FOUND;
 	}
 	
 	return u8_l_dataFlag;
-}
-
-/*******************************************************************************************************************************************************************/
-/*
- Name: APP_checkUserInput
- Input: void
- Output: void
- Description: Function to validate user's input.
-*/
-void APP_checkUserInput	  ( void )
-{
-	u8 u8_l_userInput = 0;
-	
-	/* Loop: Until user enters a valid input */
-	while ( ( u8_l_userInput != '1' ) && ( u8_l_userInput != '2' ) )
-	{
-		/* Step 1: Display "Please press 1 for entering user mode and 2 for programming mode:" on terminal */
-		UART_transmitString( ( u8 * ) "Please choose:\r(1) For User Mode\r(2) For Programming Mode\r<< Your Input: " );
-		
-		/* Step 2: Receive UsrInput value */
-		UART_receiveByteBlock( &u8_l_userInput );
-		
-		/* Check 1.1: Required usrInput */
-		switch ( u8_l_userInput )
-		{
-			case '1': u8_gs_appMode = APP_U8_USER_MODE; break;
-			case '2': u8_gs_appMode = APP_U8_PROG_MODE; break;
-			default : UART_transmitString( ( u8 * ) "\r\r>> Wrong Input, Try Again\r\r" );
-		}
-	}
 }
 
 /*******************************************************************************************************************************************************************/
@@ -223,7 +244,7 @@ void APP_programmerMode   ( void )
 		u8_l_validPANFlag = APP_U8_FLAG_UP;
 		
 		/* Step 1: Display "Please Enter Card PAN" on terminal */
-		UART_transmitString( ( u8 * ) "\r\rPlease Enter Card PAN: " );
+		UART_transmitString( ( u8 * ) "Please Enter Card PAN: " );
 		
 		u8_l_recData = 0;
 		u8_l_index = 0;
@@ -371,70 +392,60 @@ void APP_programmerMode   ( void )
 */
 void APP_userMode	      ( void )
 {
-	APP_receivePINFromATM();
-	APP_sendPANToATM();
+	APP_receiveATMData( APP_EN_PIN );
+	//APP_receiveATMData( APP_EN_PAN );
 }
 
 /*******************************************************************************************************************************************************************/
 /*
- Name: APP_receivePINFromATM
+ Name: APP_receiveATMData
  Input: void
  Output: void
- Description: Function to receive PIN from ATM ECU using SPI, and validate this PIN, then sends back validation result PIN_OK or PIN_WRONG.
+ Description: Function to implement User Mode flow.
 */
-void APP_receivePINFromATM   ( void )
+void APP_receiveATMData   ( EN_cardData_t en_a_cardData )
 {
-	u8 u8_l_dummyData = 0xDD;
+	u8 u8_l_dummyData = 'H';
 	u8 u8_l_recPIN[5] = { 0 };
 		
 	/* Step 1: Send a notification to ATM ECU to receive data (falling edge) */
-	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_HIGH );
-	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_LOW  );
+	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_HIGH);
+	DIO_write( DIO_U8_PIN_0, PORT_B, DIO_U8_PIN_LOW );
 		
 	/* Step 2: Receive response "PIN_READY" from ATM ECU */
 	/* Loop: Until response is received using SPI */
-	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_ATM_PIN_READY );
+	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_PIN_READY );
 		
-	/* Step 3: Send response "CARD_ACK" to ATM ECU */
-	SPI_transceiver( APP_CMD_CARD_ACK );
+	/* Step 3: Send response "RECV_READY" to ATM ECU */
+	SPI_transceiver( APP_CMD_RECV_READY );
+	
+	u8_l_dummyData = 0xFF;
 	
 	/* Step 4: Receive PIN from ATM ECU */
 	/* Loop: Until PIN is received using SPI */
 	for ( u8 u8_l_index = 0; u8_l_index < 4; u8_l_index++ )
 	{
-		/* Step 4.1: Send response "RECV_PIN" to ATM ECU */
+		/* Step 5: Send response "RECV_PIN" to ATM ECU */
 		SPI_transceiver( APP_CMD_RECV_PIN + u8_l_index );
-		/* Step 4.2: Receive response PIN value byte by byte from ATM ECU */
+		/* Step 6: Receive response PIN value byte by byte from ATM ECU */
 		u8_l_recPIN[u8_l_index] = SPI_transceiver( u8_l_dummyData );
 	}
 		
 	u8_l_recPIN[4] = '\0';
 		
-	/* Step 5: Compare PIN from Card ECU with the PIN received from ATM ECU */
+	/* Step 7: Compare PIN from Card ECU with the PIN received from ATM ECU */
 	/* Check 1: PINs are Identical */
 	if ( !( strcmp( u8_gs_newPIN1, u8_l_recPIN ) ) )
 	{
-		/* Step 5.1: Send response "PIN_OK" to ATM ECU */
-		SPI_transceiver( APP_STATE_PIN_OK );
+		/* Step 8A: Send response "PIN_OK" to ATM ECU */
+		SPI_transceiver( APP_CMD_PIN_OK );
 	}
 	/* Check 2: PINs are not Identical */
 	else
 	{
-		/* Step 5.2: Send response "PIN_WRONG" to ATM ECU */
-		SPI_transceiver( APP_STATE_PIN_WRONG );
+		/* Step 8B: Send response "PIN_WRONG" to ATM ECU */
+		SPI_transceiver( APP_CMD_PIN_WRONG );
 	}
-}
-
-/*******************************************************************************************************************************************************************/
-/*
- Name: APP_sendPANToATM
- Input: void
- Output: void
- Description: Function to send PAN to ATM ECU using SPI.
-*/
-void APP_sendPANToATM	  ( void )
-{
-	
 }
 
 /*******************************************************************************************************************************************************************/

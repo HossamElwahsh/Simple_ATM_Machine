@@ -40,22 +40,24 @@
 
 /* APP PAN & PIN Addresses */
 #define APP_U16_PAN_ADDRESS		0x0000
-#define APP_U16_PIN_ADDRESS		0x0018
+#define APP_U16_PIN_ADDRESS		0x002C
 
-/* APP Data (PAN & PIN) in Memory (EEPROM) States */
+/* APP Data (PAN & PIN) in Memory (EEPROM) */
 #define APP_U8_DATA_NOT_FOUND	0
 #define APP_U8_DATA_FOUND		1
 
-/* APP SPI Commands and States */
-#define APP_CMD_ATM_PIN_READY	0xC1
-#define APP_CMD_ATM_PAN_REQ		0xC2
-
-#define APP_CMD_CARD_ACK		0xC2
-
+/* APP SPI Commands */
+#define APP_CMD_PIN_READY		0xC1
+#define APP_CMD_RECV_READY		0xC2
 #define APP_CMD_RECV_PIN		0xA0
+#define APP_CMD_PIN_OK			0xF0
+#define APP_CMD_PIN_WRONG		0xF5
 
-#define APP_STATE_PIN_OK		0xF0
-#define APP_STATE_PIN_WRONG		0xF5
+/* APP Typedefs */
+typedef enum EN_cardData_t
+{
+	APP_EN_PAN, APP_EN_PIN
+}EN_cardData_t;
 
 /*******************************************************************************************************************************************************************/
 /* APP Functions' Prototypes */
@@ -69,8 +71,7 @@ void APP_checkUserInput	  ( void );
 void APP_programmerMode   ( void );
 void APP_userMode	      ( void );
 
-void APP_receivePINFromATM( void );
-void APP_sendPANToATM	  ( void );
+void APP_receiveATMData   ( EN_cardData_t en_a_cardData );
 
 /*******************************************************************************************************************************************************************/
 

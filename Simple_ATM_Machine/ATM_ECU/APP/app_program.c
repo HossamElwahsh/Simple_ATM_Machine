@@ -182,7 +182,6 @@ void APP_startProgram(void) {
                     while(u8_l_response != APP_RESP_ACK)
                     {
                         u8_l_response = SPI_transceiver(APP_CMD_PIN_READY);
-                        if(u8_l_response == APP_RESP_PIN_REC_READY) break;
                     }
 
                     u8_l_response = 0;
