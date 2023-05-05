@@ -50,8 +50,8 @@
 #define APP_CMD_PIN_READY		0xC1
 #define APP_CMD_RECV_READY		0xC2
 #define APP_CMD_RECV_PIN		0xA0
-#define APP_CMD_PIN_WRONG		0xF0
-#define APP_CMD_PIN_OK			0xF1
+#define APP_CMD_PIN_OK			0xF0
+#define APP_CMD_PIN_WRONG		0xF5
 
 /* APP Typedefs */
 typedef enum EN_cardData_t

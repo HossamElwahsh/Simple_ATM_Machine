@@ -29,7 +29,7 @@ void APP_initialization   ( void )
 	DIO_init( DIO_U8_PIN_0, PORT_B, DIO_OUT );
 	
 	TIMER_timer0NormalModeInit(DISABLED);
-	
+	SPI_init();
 	UART_initialization();
 
 	/* HAL Initialization */
@@ -392,9 +392,8 @@ void APP_programmerMode   ( void )
 */
 void APP_userMode	      ( void )
 {
-	//APP_receiveATMData( APP_EN_PAN );
-	
 	APP_receiveATMData( APP_EN_PIN );
+	//APP_receiveATMData( APP_EN_PAN );
 }
 
 /*******************************************************************************************************************************************************************/
@@ -406,7 +405,7 @@ void APP_userMode	      ( void )
 */
 void APP_receiveATMData   ( EN_cardData_t en_a_cardData )
 {
-	u8 u8_l_dummyData = 0;
+	u8 u8_l_dummyData = 'H';
 	u8 u8_l_recPIN[5] = { 0 };
 		
 	/* Step 1: Send a notification to ATM ECU to receive data (falling edge) */
@@ -417,9 +416,11 @@ void APP_receiveATMData   ( EN_cardData_t en_a_cardData )
 	/* Loop: Until response is received using SPI */
 	while ( SPI_transceiver( u8_l_dummyData ) != APP_CMD_PIN_READY );
 		
-	/* Step 3: Send response "PIN_READY" to ATM ECU */
+	/* Step 3: Send response "RECV_READY" to ATM ECU */
 	SPI_transceiver( APP_CMD_RECV_READY );
-		
+	
+	u8_l_dummyData = 0xFF;
+	
 	/* Step 4: Receive PIN from ATM ECU */
 	/* Loop: Until PIN is received using SPI */
 	for ( u8 u8_l_index = 0; u8_l_index < 4; u8_l_index++ )
