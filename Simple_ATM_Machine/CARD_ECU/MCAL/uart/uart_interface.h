@@ -30,7 +30,7 @@
 /*******************************************************************************************************************************************************************/
 /* UART Functions' prototypes */
 
-vd UART_initialization ( void );
+vd UART_initialization  ( void );
 
 u8 UART_receiveByte     ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte );
 u8 UART_receiveByteBlock( u8 *pu8_a_returnedReceiveByte );
