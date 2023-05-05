@@ -269,6 +269,7 @@ void APP_startProgram(void) {
                         str_g_currentPAN[u8_l_currentPanIndex] = u8_l_response;
                         u8_l_currentPanIndex++;
                     }
+                    TIMER_delay_ms(100);
                 }
 
                 str_g_currentPAN[u8_l_currentPanIndex] = '\0'; // null-terminating character
