@@ -327,7 +327,7 @@ void APP_startProgram(void) {
                         } else u8_l_currentPosition++;
                     }
                         // break out of amount entry if long press (ENTER) was pressed -> continue trx flow
-                    else if(u8_l_btnState == MBTN_STATE_LONG_RELEASED) break;
+                    else if(u8_l_btnState == MBTN_STATE_LONG_RELEASED && strcmp((char *) str_l_transactionAmount, "0000.00")) break;
 
                     /* End Enter/Zero button poll */
                     if(u8_l_currentPosition == 7) // repeat from start if reached end of number placeholders
