@@ -245,7 +245,6 @@ void APP_startProgram(void) {
                 LCD_clear();
                 LCD_sendString((u8 *) "Retrieving\naccount data...");
                 u8 u8_l_response = 0;
-
                 // Start PAN request SPI comm and wait for ACK
                 while(u8_l_response != APP_RESP_CARD_ACK)
                 {
@@ -264,8 +263,21 @@ void APP_startProgram(void) {
 
                 // Fetch All PAN digits (with validation)
                 u8 u8_l_currentPanIndex = 0;
+                u8 u8_l_cursor = LCD_COL12;
                 while(u8_l_currentPanIndex < u8_l_panLength)
                 {
+                    // progress bar UI
+                    //region Progress bar UI
+                    LCD_setCursor(LCD_LINE1, u8_l_cursor);
+                    LCD_sendChar('.');
+                    if(u8_l_cursor == LCD_COL15) {
+                        u8_l_cursor = LCD_COL11;
+                        LCD_setCursor(LCD_LINE1, LCD_COL12);
+                        LCD_sendString((u8 *)"    ");
+                    }
+                    u8_l_cursor++;
+                    //endregion
+
                     u8_l_response = SPI_transceiver(APP_CMD_ATM_PAN_INDEX_0_REQ + u8_l_currentPanIndex);
                     if(u8_l_response >= '0' && u8_l_response <= '9') // valid ASCII number
                     {
