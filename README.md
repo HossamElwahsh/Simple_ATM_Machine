@@ -12,11 +12,11 @@
 
 ## Quick Links
 > - `Project Documentation`
-    >     👉 [PDF]()
+    >     👉 [PDF - uploading]()
     >     👉 [Google Docs](https://docs.google.com/document/d/1Tz5IJziaRbRw-O9JCpY1Yb374tjboJ_zGpGwjSU8gU4/edit?usp=sharing)
 > - `Video` 👉 [Watch on Youtube]()
-> - `Team Backlog` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing) 👉 [Excel]()
-> - `Test Protocol` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing#gid=320715025) 👉 [Excel]()
+> - `Team Backlog` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing) 👉 [Excel-uploading]()
+> - `Test Protocol` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing#gid=320715025) 👉 [Excel-uploading]()
 > - ---
 > ### Technical
 > - `Proteus Simulation (Proteus 8.13)` 👉 [Simulation_8.13](Simulation/Simple_ATM_Machine.pdsprj)
