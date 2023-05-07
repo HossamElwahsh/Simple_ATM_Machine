@@ -18,13 +18,13 @@
  */
 void TWI_init(void)
 {
-    /* Bit Rate: 400.000 kbps using zero pre-scaler TWPS=00 and F_CPU=8Mhz */
+    /* Bit Rate: 400.000 kbps using zero pre-scaler TWPS=00 and F_CPU=1Mhz */
     TWI_U8_TWBR_REG = 0x02;
     TWI_U8_TWSR_REG = 0x00;
 
     /* Two Wire Bus address my address if any master device want to call me: 0x1 (used in case this MC is a slave device)
        General Call Recognition: Off */
-    TWI_U8_TWAR_REG = 0b00000010; // my address = 0x01 :) 
+    TWI_U8_TWAR_REG = 0x02;  
 
     TWI_U8_TWCR_REG = (1 << TWEN); /* enable TWI */
 }
