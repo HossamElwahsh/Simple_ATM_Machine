@@ -21,14 +21,11 @@
 > ### Technical
 > - `Proteus Simulation (Proteus 8.13)` 👉 [Simulation_8.13](Simulation/Simple_ATM_Machine.pdsprj)
 > #### for older proteus version you can import the proteus clip file (pdsclip) and update the MC hex file:
-> - `Proteus clip file` 👉 [Proteus PDSCLIP]()
-> - `Project Hex` 👉 [AC Control System.hex]()
+> - `Proteus clip file` 👉 [Proteus PDSCLIP](Simulation/Clip_Simple_ATM_Machine.pdsclip)
+> - `ATM ECU Hex` 👉 [ATM_ECU.hex](Simulation/hex/ATM_ECU.hex)
+> - `CARD ECU Hex` 👉 [CARD_ECU.hex](Simulation/hex/CARD_ECU.hex)
 
 
-### Assumptions
-- 
-
-### Requirements
 
 ---------
 
@@ -36,4 +33,4 @@
 ![Proteus Simulation](Documents/Images/Simple_ATM_Machine_LQ.jpg)
 
 ## Layered Architecture
-![Layered Architecture]()
+![Layered Architecture](Documents/Flowcharts/Flowcharts%20-%20PNGs/Modules%20Design%20Architecture.png)
