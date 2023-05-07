@@ -33,7 +33,7 @@
 /* APP Modes */
 #define APP_U8_PROG_MODE		0
 #define APP_U8_USER_MODE		1
-#define APP_U8_LAUNCH_MODE		2
+#define APP_U8_CHECK_MODE		2
 
 /* APP Flag States */
 #define APP_U8_FLAG_DOWN		0
@@ -70,6 +70,10 @@ u8   APP_checkDataInMemory( void );
 void APP_checkUserInput	  ( void );
 
 void APP_programmerMode   ( void );
+
+void APP_receivePANFromTerminal( void );
+void APP_receivePINFromTerminal( void );
+
 void APP_userMode	      ( void );
 
 u8	 APP_receivePINFromATM( void );

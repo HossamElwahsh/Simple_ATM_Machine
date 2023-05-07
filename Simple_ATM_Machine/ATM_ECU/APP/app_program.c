@@ -14,7 +14,7 @@
 ST_accountsDB_t accountsDB[APP_MAX_DB_SIZE] =                                /* Visa */
         /* Balance   |  State |        PAN        */  /* Balance    |  State |        PAN       */
         {{9999.99f,    BLOCKED, "4728459258966333"},
-         {5805.5f,     RUNNING, "4946084897338284"},
+         {5805.5f,     BLOCKED, "4946084897338284"},
          {9360.12f,   RUNNING, "4728451059691228"},
          {1600.58f,   RUNNING, "4573762093153876"},
          {520.9f,      RUNNING, "4127856791257426"},

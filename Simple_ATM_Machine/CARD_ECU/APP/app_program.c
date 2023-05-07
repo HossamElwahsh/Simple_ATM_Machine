@@ -51,13 +51,13 @@ void APP_startProgram	  ( void )
 	/* Check 1: There is Data (PAN & PIN) previously stored in Memory (EEPROM) */			
 	if ( APP_checkDataInMemory() == APP_U8_DATA_FOUND )
 	{
-		u8_gs_appMode = APP_U8_LAUNCH_MODE;		
+		u8_gs_appMode = APP_U8_CHECK_MODE;		
 	}
 	
 	/* Toggle Forever */
 	while(1)
 	{		
-		/* Check 2: Required currentMode */
+		/* Check 2: Required appMode */
 		switch ( u8_gs_appMode )
 		{
 			case APP_U8_PROG_MODE:				
@@ -67,10 +67,10 @@ void APP_startProgram	  ( void )
 				
 			case APP_U8_USER_MODE:
 				APP_userMode();
-				u8_gs_appMode = APP_U8_LAUNCH_MODE;
+				u8_gs_appMode = APP_U8_CHECK_MODE;
 				break;
 			
-			case APP_U8_LAUNCH_MODE:
+			case APP_U8_CHECK_MODE:
 				APP_checkUserInput();
 				break;
 		}
@@ -100,7 +100,7 @@ u8   APP_checkDataInMemory( void )
 	while ( *pu8_l_PANCheck != '\0' )
 	{
 		/* Check 1: Retrieved Data is not a valid Numeric PAN */
-		if ( *pu8_l_PANCheck < 48 || *pu8_l_PANCheck > 57 )
+		if ( *pu8_l_PANCheck < '0' || *pu8_l_PANCheck > '9' )
 		{
 			/* Update DataFlag = DATA_NOT_FOUND */
 			u8_l_dataFlag = APP_U8_DATA_NOT_FOUND;
@@ -216,14 +216,27 @@ void APP_checkUserInput	  ( void )
  Description: Function to implement Programmer Mode flow.
 */
 void APP_programmerMode   ( void )
+{	
+	APP_receivePANFromTerminal();
+		
+	UART_transmitString( ( u8 * ) "\r          <<<<<<<<<<<>>>>>>>>>>          \r\r" );
+	
+	APP_receivePINFromTerminal();
+}
+
+/*******************************************************************************************************************************************************************/
+/*
+ Name: APP_receivePANFromTerminal
+ Input: void
+ Output: void
+ Description: Function to receive PAN from terminal using UART, then validate this PAN, if this value is valid, it will be stored in EEPROM.
+*/
+void APP_receivePANFromTerminal( void )
 {
-	u8 u8_l_validPANFlag  = APP_U8_FLAG_DOWN;
-	u8 u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
+	u8 u8_l_validPANFlag = APP_U8_FLAG_DOWN;
 	u8 u8_l_charFlag = APP_U8_FLAG_DOWN;
-	
-	u8 u8_l_newPIN2[10] = { 0 };
-	
-	u8 u8_l_recData = 0;	
+		
+	u8 u8_l_recData = 0;
 	u8 u8_l_index = 0;
 	
 	/* Loop: Until user enters a valid PAN */
@@ -266,7 +279,7 @@ void APP_programmerMode   ( void )
 			
 			u8_l_index++;
 		}
-				
+		
 		/* Check 2: PAN is a non numeric */
 		if ( u8_l_charFlag == APP_U8_FLAG_UP )
 		{
@@ -275,7 +288,7 @@ void APP_programmerMode   ( void )
 			u8_l_validPANFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
-				
+		
 		/* Check 3: PAN is not in the valid range */
 		if ( u8_l_index < 16 || u8_l_index > 19 )
 		{
@@ -289,10 +302,29 @@ void APP_programmerMode   ( void )
 	/* Update PANSize with the index */
 	u8_gs_PANSize = u8_l_index;
 	
+	/* Display "PAN is saved successfully" on terminal */
+	UART_transmitString( ( u8 * ) ">> PAN is saved successfully\n\r\r" );
+	
 	/* Store Data (PAN) in Memory (EEPROM) */
 	EEPROM_writeArray( APP_U16_PAN_ADDRESS, u8_gs_cardPAN );
-		
-	UART_transmitString( ( u8 * ) "\r          <<<<<<<<<<<>>>>>>>>>>          \r\r" );
+}
+
+/*******************************************************************************************************************************************************************/
+/*
+ Name: APP_receivePINFromTerminal
+ Input: void
+ Output: void
+ Description: Function to receive PIN from terminal using UART, then validate this PIN, if this value is valid, it will be stored in EEPROM.
+*/
+void APP_receivePINFromTerminal( void )
+{
+	u8 u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
+	u8 u8_l_charFlag = APP_U8_FLAG_DOWN;
+	
+	u8 u8_l_newPIN2[10] = { 0 };
+	
+	u8 u8_l_recData = 0;
+	u8 u8_l_index = 0;
 	
 	/* Loop: Until user enters valid PINs */
 	while ( u8_l_validPINsFlag == APP_U8_FLAG_DOWN )
@@ -337,7 +369,7 @@ void APP_programmerMode   ( void )
 		
 		/* Set NULL character in the end of string, and overwrite the Enter character */
 		u8_l_newPIN2[u8_l_index - 1] = '\0';
-			
+		
 		/* Check 1: Two PINs are not identical */
 		if ( strcmp( u8_gs_newPIN1, u8_l_newPIN2 ) )
 		{
@@ -346,9 +378,9 @@ void APP_programmerMode   ( void )
 			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
-			
+		
 		u8_l_index = 0;
-			
+		
 		/* Loop: Until the end of PIN */
 		while ( u8_gs_newPIN1[u8_l_index] != '\0' )
 		{
@@ -361,7 +393,7 @@ void APP_programmerMode   ( void )
 			
 			u8_l_index++;
 		}
-			
+		
 		/* Check 3: PIN is a non numeric */
 		if ( u8_l_charFlag == APP_U8_FLAG_UP )
 		{
@@ -370,7 +402,7 @@ void APP_programmerMode   ( void )
 			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
-			
+		
 		/* Check 4: PIN is not equal to 4 digits */
 		if ( u8_l_index != 4 )
 		{
@@ -380,6 +412,9 @@ void APP_programmerMode   ( void )
 			continue;
 		}
 	}
+	
+	/* Display "PIN is saved successfully" on terminal */
+	UART_transmitString( ( u8 * ) ">> PIN is saved successfully\n\r\r" );
 	
 	/* Store Data (PIN) in Memory (EEPROM) */
 	EEPROM_writeArray( APP_U16_PIN_ADDRESS, u8_gs_newPIN1 );

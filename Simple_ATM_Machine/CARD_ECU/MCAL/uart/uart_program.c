@@ -186,7 +186,7 @@ vd UART_initialization  ( void )
  Name: UART_receiveByte
  Input: u8 InterruptionMode and Pointer to u8 ReturnedReceiveByte
  Output: u8 Error or No Error
- Description: Function to Receive Byte using both Polling and Interrupt Modes, with Timeout mechanism..
+ Description: Function to Receive Byte using both Polling and Interrupt Modes, with Timeout mechanism.
 */
 u8 UART_receiveByte     ( u8 u8_a_interruptionMode, u8 *pu8_a_returnedReceiveByte )
 {
