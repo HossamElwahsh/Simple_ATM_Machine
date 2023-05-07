@@ -465,6 +465,7 @@ void APP_switchState(u8 u8_a_state) {
     switch (u8_a_state) {
         case APP_STATE_LAUNCH:
             LCD_clear();
+            KPD_enableKPD();
             LCD_setCursor(LCD_LINE0, LCD_COL1);
             LCD_sendString((u8 *) "Welcome to ATM");    // Display welcome message on LCD for 1 second
             LCD_setCursor(LCD_LINE1, LCD_COL1);
