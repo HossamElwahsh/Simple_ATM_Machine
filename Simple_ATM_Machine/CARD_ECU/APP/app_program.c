@@ -193,7 +193,7 @@ void APP_checkUserInput	  ( void )
 	while ( ( u8_l_userInput != '1' ) && ( u8_l_userInput != '2' ) )
 	{
 		/* Step 1: Display "Please press 1 for entering user mode and 2 for programming mode:" on terminal */
-		UART_transmitString( ( u8 * ) "\r\rPlease choose:\r(1) For User Mode\r(2) For Programming Mode\r\r<< Your Input: " );
+		UART_transmitString( ( u8 * ) "\rPlease choose:\r(1) For User Mode\r(2) For Programming Mode\r\r<< Your Input: " );
 		
 		/* Step 2: Receive UsrInput value */
 		UART_receiveByteBlock( &u8_l_userInput );
@@ -203,9 +203,11 @@ void APP_checkUserInput	  ( void )
 		{
 			case '1': u8_gs_appMode = APP_U8_USER_MODE; break;
 			case '2': u8_gs_appMode = APP_U8_PROG_MODE; break;
-			default : UART_transmitString( ( u8 * ) "\r\r>> Wrong Input, Try Again\r\r" );
+			default : UART_transmitString( ( u8 * ) "\r>> Wrong Input, Try Again\r" );
 		}
 	}
+	
+	UART_transmitString( ( u8 * ) "\r\r          <<<<<<<<<<<>>>>>>>>>>          \r" );
 }
 
 /*******************************************************************************************************************************************************************/
@@ -219,7 +221,7 @@ void APP_programmerMode   ( void )
 {	
 	APP_receivePANFromTerminal();
 		
-	UART_transmitString( ( u8 * ) "\r          <<<<<<<<<<<>>>>>>>>>>          \r\r" );
+	UART_transmitString( ( u8 * ) "\r          <<<<<<<<<<<>>>>>>>>>>          \r" );
 	
 	APP_receivePINFromTerminal();
 }
@@ -249,7 +251,7 @@ void APP_receivePANFromTerminal( void )
 		u8_l_validPANFlag = APP_U8_FLAG_UP;
 		
 		/* Step 1: Display "Please Enter Card PAN" on terminal */
-		UART_transmitString( ( u8 * ) "\r\rPlease Enter Card PAN: " );
+		UART_transmitString( ( u8 * ) "\rPlease Enter Card PAN: " );
 		
 		u8_l_recData = 0;
 		u8_l_index = 0;
@@ -293,7 +295,7 @@ void APP_receivePANFromTerminal( void )
 		if ( u8_l_index < 16 || u8_l_index > 19 )
 		{
 			/* Display "Wrong PAN" on terminal */
-			UART_transmitString( ( u8 * ) ">> Wrong PAN [Not in valid range]\n\r" );
+			UART_transmitString( ( u8 * ) ">> Wrong PAN [Not In Valid Range]\n\r" );
 			u8_l_validPANFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
@@ -303,7 +305,7 @@ void APP_receivePANFromTerminal( void )
 	u8_gs_PANSize = u8_l_index;
 	
 	/* Display "PAN is saved successfully" on terminal */
-	UART_transmitString( ( u8 * ) ">> PAN is saved successfully\n\r\r" );
+	UART_transmitString( ( u8 * ) ">> PAN is saved successfully\n\r" );
 	
 	/* Store Data (PAN) in Memory (EEPROM) */
 	EEPROM_writeArray( APP_U16_PAN_ADDRESS, u8_gs_cardPAN );
@@ -337,7 +339,7 @@ void APP_receivePINFromTerminal( void )
 		u8_l_validPINsFlag = APP_U8_FLAG_UP;
 		
 		/* Step 3: Display "Please Enter New PIN" on terminal */
-		UART_transmitString( ( u8 * ) "Please Enter New PIN: " );
+		UART_transmitString( ( u8 * ) "\rPlease Enter New PIN: " );
 		
 		u8_l_recData = 0;
 		u8_l_index = 0;
@@ -374,7 +376,7 @@ void APP_receivePINFromTerminal( void )
 		if ( strcmp( u8_gs_newPIN1, u8_l_newPIN2 ) )
 		{
 			/* Display "Wrong PIN" on terminal */
-			UART_transmitString( ( u8 * ) ">> Wrong PIN [Non Identical]\n\r\r" );
+			UART_transmitString( ( u8 * ) ">> Wrong PIN [Non Identical]\n\r" );
 			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
@@ -398,7 +400,7 @@ void APP_receivePINFromTerminal( void )
 		if ( u8_l_charFlag == APP_U8_FLAG_UP )
 		{
 			/* Display "Wrong PIN" on terminal */
-			UART_transmitString( ( u8 * ) ">> Wrong PIN [Non Numeric]\n\r\r" );
+			UART_transmitString( ( u8 * ) ">> Wrong PIN [Non Numeric]\n\r" );
 			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
@@ -407,14 +409,14 @@ void APP_receivePINFromTerminal( void )
 		if ( u8_l_index != 4 )
 		{
 			/* Display "Wrong PIN" on terminal */
-			UART_transmitString( ( u8 * ) ">> Wrong PIN [Not 4 Digits]\n\r\r" );
+			UART_transmitString( ( u8 * ) ">> Wrong PIN [Not 4 Digits]\n\r" );
 			u8_l_validPINsFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
 	}
 	
 	/* Display "PIN is saved successfully" on terminal */
-	UART_transmitString( ( u8 * ) ">> PIN is saved successfully\n\r\r" );
+	UART_transmitString( ( u8 * ) ">> PIN is saved successfully\n\r" );
 	
 	/* Store Data (PIN) in Memory (EEPROM) */
 	EEPROM_writeArray( APP_U16_PIN_ADDRESS, u8_gs_newPIN1 );

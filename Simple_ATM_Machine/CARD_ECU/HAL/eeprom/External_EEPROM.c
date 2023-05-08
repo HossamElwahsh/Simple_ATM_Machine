@@ -6,6 +6,16 @@
 */
 #include "External_EEPROM.h"
 
+
+/*
+* initializing the EEPROM protocol
+*
+* Parameters
+*       	[in] void
+* Return
+*   	    [out] void
+*
+*/
 void EEPROM_init(void)
 {
 	TWI_init(); // just initialize the TWI module inside the MC
@@ -13,6 +23,15 @@ void EEPROM_init(void)
 
 #ifdef EEPROM_24C16B
 
+/*
+* Writing one byte inside the External_EEPROM 
+*
+* Parameters
+*       	[in] u16_l_byteAddress desired address, u8_l_byteData desired data to be saved
+* Return
+*   	    [out] EN_eepromError_t error_state
+*
+*/
 EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
 {
 	TWI_start();
@@ -43,6 +62,15 @@ EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
 	return EEPROM_SUCCESS;
 }
 
+/*
+* Reading one byte from the External_EEPROM
+*
+* Parameters
+*       	[in] u16_l_byteAddress desired address, *u8_l_byteData pointer to save the saved data.
+* Return
+*   	    [out] EN_eepromError_t error_state
+*
+*/
 EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 {
 	TWI_start();
@@ -86,7 +114,16 @@ EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 
 
 #else
-
+// This block of code is used when the desired memory is AT24C256KB
+/*
+* Writing one byte inside the External_EEPROM
+*
+* Parameters
+*       	[in] u16_l_byteAddress desired address, u8_l_byteData desired data to be saved
+* Return
+*   	    [out] EN_eepromError_t error_state
+*
+*/
 EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
 {
 	TWI_start();
@@ -122,6 +159,15 @@ EN_eepromError_t EEPROM_writeByte(u16 u16_l_byteAddress, u8 u8_l_byteData)
 	return EEPROM_SUCCESS;
 }
 
+/*
+* Reading one byte from the External_EEPROM
+*
+* Parameters
+*       	[in] u16_l_byteAddress desired address, *u8_l_byteData pointer to save the saved data.
+* Return
+*   	    [out] EN_eepromError_t error_state
+*
+*/
 EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 {
 	TWI_start();
@@ -173,6 +219,17 @@ EN_eepromError_t EEPROM_readByte(u16 u16_l_byteAddress, u8* u8_l_byteData)
 
 #endif
 
+/*
+* Writing Array_of_Bytes or String to be saved inside the External_EEPROM
+*
+* Parameters
+*       	[in] u16_l_byteAddress desired address where the data will be saved in the EEPROM.
+*				 u8* pstr pointer to string which contain the data to be saved.	
+* Return
+*   	    [out] EN_eepromError_t error_state.
+*
+*/
+
 EN_eepromError_t EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr)
 {
 	u8 i = 0, x = 0;
@@ -189,6 +246,15 @@ EN_eepromError_t EEPROM_writeArray(u16 u16_l_byteAddress, u8* pstr)
 	return EEPROM_SUCCESS;
 }
 
+/*
+* Reading Array_of_Bytes or String from the External_EEPROM
+*
+* Parameters
+*       	[in] u16_l_byteAddress desired address where the data is saved in the EEPROM.
+* Return
+*   	    [out] u8* to array that contain the saved data inside the EEPROM.
+*
+*/
 u8* EEPROM_readArray(u16 u16_l_byteAddress)
 {
 	u8 i = 0;
@@ -203,6 +269,15 @@ u8* EEPROM_readArray(u16 u16_l_byteAddress)
 	return arr;
 }
 
+/*
+* Converting the decimal formate of the address to hex formate.
+*
+* Parameters
+*       	[in] u8 decimal value.
+* Return
+*   	    [out] u8 hex value.
+*
+*/
 u8 decimal_to_hex(u8 val)
 {
 	u8 msb, lsb, hex;
