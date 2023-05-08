@@ -295,7 +295,7 @@ void APP_receivePANFromTerminal( void )
 		if ( u8_l_index < 16 || u8_l_index > 19 )
 		{
 			/* Display "Wrong PAN" on terminal */
-			UART_transmitString( ( u8 * ) ">> Wrong PAN [Not in valid range]\n\r" );
+			UART_transmitString( ( u8 * ) ">> Wrong PAN [Not In Valid Range]\n\r" );
 			u8_l_validPANFlag = APP_U8_FLAG_DOWN;
 			continue;
 		}
