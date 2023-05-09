@@ -14,7 +14,7 @@
 > - `Project Documentation`
     >     👉 [PDF - uploading]()
     >     👉 [Google Docs](https://docs.google.com/document/d/1Tz5IJziaRbRw-O9JCpY1Yb374tjboJ_zGpGwjSU8gU4/edit?usp=sharing)
-> - `Video` 👉 [Intro](Documents/Videos/Parts/0.%20Intro.mp4) (rest is uploading)
+> - `Video` 👉 [Youtube](https://youtu.be/C9MFFbGriCI)
 > - `Team Backlog` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing) 👉 [Excel](Documents/Hacker%20Kermit%20-%20Team%20Backlog%20Simple%20ATM%20Machine.xlsx)
 > - `Test Protocol` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing#gid=320715025) 👉 [Excel](Documents/Hacker%20Kermit%20-%20Test%20Protocol%20Simple%20ATM%20Machine.xlsx)
 > - ---
