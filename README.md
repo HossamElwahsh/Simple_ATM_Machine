@@ -15,8 +15,8 @@
     >     👉 [PDF - uploading]()
     >     👉 [Google Docs](https://docs.google.com/document/d/1Tz5IJziaRbRw-O9JCpY1Yb374tjboJ_zGpGwjSU8gU4/edit?usp=sharing)
 > - `Video` 👉 [Intro](Documents/Videos/Parts/0.%20Intro.mp4) (rest is uploading)
-> - `Team Backlog` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing) 👉 [Excel](Documents/Hacker%20Kermit%20-%20Team%20Backlog%20Simple%20ATM%20Machine.xlsx)
-> - `Test Protocol` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing#gid=320715025) 👉 [Excel](Documents/Hacker%20Kermit%20-%20Test%20Protocol%20Simple%20ATM%20Machine.xlsx)
+> - `Team Backlog` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing) 👉 [Excel-uploading]()
+> - `Test Protocol` 👉 [Google Sheets](https://docs.google.com/spreadsheets/d/1ozed9YwEV6k1paEu0mNiVpEEqcUQBBLoRsS8NCEPoLg/edit?usp=sharing#gid=320715025) 👉 [Excel-uploading]()
 > - ---
 > ### Technical
 > - `Proteus Simulation (Proteus 8.13)` 👉 [Simulation_8.13](Simulation/Simple_ATM_Machine.pdsprj)
@@ -33,4 +33,4 @@
 ![Proteus Simulation](Documents/Images/Simple_ATM_Machine_LQ.jpg)
 
 ## Layered Architecture
-![Layered Architecture](Documents/Flowcharts/Flowcharts%20-%20Images/Simple%20ATM%20Machine%20-%20System%20Modules.drawio.png)
+![Layered Architecture](Documents/Flowcharts/Flowcharts%20-%20PNGs/Modules%20Design%20Architecture.png)
